@@ -1,0 +1,47 @@
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+    <type type="example.BaseTask" extends="xlrelease.ContainerTask" virtual="true">
+        <!-- Container image - location of the task logic -->
+        <property name="image" required="true" hidden="true" default="@registry.url@/@registry.org@/@project.name@:@project.version@" transient="true"/>
+
+        <!-- Task UI properties -->
+        <property name="iconLocation" default="test.png" hidden="true"/>
+        <property name="taskColor" hidden="true" default="#667385"/>
+    </type>
+
+    <type type="containerExamples.Hello" extends="example.BaseTask" description="Simple greeter task" >
+        <property name="yourName" category="input" kind="string" default="World"/>
+        <property name="greeting" kind="string" category="output"/>
+    </type>
+
+    <type type="containerExamples.SetSystemMessage" extends="example.BaseTask" description="Simple API task">
+        <property name="message" category="input" kind="string" description="This message will appear as a banner in the Release UI. Admin access required."/>
+    </type>
+
+    <type type="containerExamples.DummyJson" extends="example.BaseTask" description="Simple API task">
+        <property name="server" category="input" referenced-type="containerExamples.Server" kind="ci"/>
+        <property name="productId" category="input" kind="string" default="1"/>
+        <property name="productName" kind="string" category="output"/>
+        <property name="productBrand" kind="string" category="output"/>
+    </type>
+
+    <type type="containerExamples.Server" extends="configuration.HttpConnection" >
+        <!-- Hide the fields which are not relevant for the integration -->
+        <property name="domain" default="empty" hidden="true"/>
+        <property name="clientId" default="empty" hidden="true"/>
+        <property name="clientSecret" default="empty" hidden="true" password="true"/>
+        <property name="scope" default="empty" hidden="true"/>
+        <property name="accessTokenUrl" default="empty" hidden="true"/>
+        <property name="authenticationMethod" kind="enum"
+                  enum-class="com.xebialabs.xlrelease.domain.configuration.HttpConnection$AuthenticationMethod"
+                  default="Basic" hidden="true">
+            <enum-values>
+                <value>Basic</value>
+            </enum-values>
+        </property>
+    </type>
+
+
+</synthetic>

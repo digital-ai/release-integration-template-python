@@ -1,0 +1,25 @@
+apiVersion: xl-release/v1
+kind: Users
+spec:
+- username: remote-runner
+  password: !value password
+  name: Remote Runner
+  email: remote@example.com
+  enabled: true
+
+---
+apiVersion: xl-release/v1
+kind: Roles
+spec:
+- name: Runners
+  principals:
+  - remote-runner
+
+---
+apiVersion: xl-release/v1
+kind: Permissions
+spec:
+  - global:
+      - role: Runners
+        permissions:
+          - runner#registration

@@ -1,0 +1,5 @@
+xl-release:
+  url: http://digitalai-release:5516/
+  username: admin
+  password: admin
+

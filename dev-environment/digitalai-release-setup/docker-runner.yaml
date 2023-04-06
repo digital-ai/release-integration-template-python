@@ -1,0 +1,10 @@
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- name: Local Docker
+  type: xlrelease.DockerJobRunner
+  host: unix:///var/run/docker.sock
+  capabilities:
+  - remote
+  - docker
+  - container
