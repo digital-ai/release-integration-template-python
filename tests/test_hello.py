@@ -14,10 +14,9 @@ class TestHello(unittest.TestCase):
             'task_id': 'task_1',
             'yourName': 'World'
         }
-        task.output_context = OutputContext(0, "", {}, [])
 
         # When
-        task.execute()
+        task.execute_task()
 
         # Then
         self.assertEqual(task.get_output_properties()['greeting'], 'Hello World')

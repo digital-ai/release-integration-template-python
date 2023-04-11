@@ -20,10 +20,9 @@ class TestDummyJson(unittest.TestCase):
                 'authenticationMethod': 'Basic'
             }
         }
-        task.output_context = OutputContext(0, "", {}, [])
 
         # When
-        task.execute()
+        task.execute_task()
 
         # Then
         self.assertEqual(task.get_output_properties()['productName'], 'iPhone 9')
