@@ -1,0 +1,81 @@
+# Yaml-based format to define types in Release, as an alternative to synthetic.xml
+# This format is in Tech Preview in Release 23.1 and may change in future versions.
+# Note that you can still use synthetic.xml, but be aware that contents are merged.
+# This means that you can't have the same type definition in both type-definitions.yaml
+# and synthetic.xml at the same time.
+
+types:
+  containerExamples.BaseTask:
+    extends: xlrelease.ContainerTask
+    virtual: true
+
+    hidden-properties:
+      image:
+        default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
+        transient: true
+      iconLocation: test.png
+      taskColor: "#667385"
+
+
+  containerExamples.Hello:
+    extends: containerExamples.BaseTask
+    description: "Simple greeter task"
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        default: World
+
+    output-properties:
+      greeting:
+        kind: string
+
+
+  containerExamples.SetSystemMessage:
+    extends: containerExamples.BaseTask
+    description: Simple API task
+
+    input-properties:
+      message:
+        description: This message will appear as a banner in the Release UI. Admin access required.
+        kind: string
+
+
+  containerExamples.DummyJson:
+    extends: containerExamples.BaseTask
+    description: Simple API task
+
+    input-properties:
+      server:
+        kind: ci
+        referenced-type: containerExamples.Server
+      productId:
+        kind: string
+        default: 1
+
+    output-properties:
+      productName:
+        kind: string
+      productBrand:
+        kind: string
+
+
+  containerExamples.Server:
+    extends: configuration.HttpConnection
+
+    # Hide the fields which are not relevant for the integration
+    hidden-properties:
+      domain: empty
+      clientId: empty
+      clientSecret:
+        default: empty
+        password: true
+      scope: empty
+      accessTokenUrl: empty
+      authenticationMethod:
+        kind: enum
+        enum-class: com.xebialabs.xlrelease.domain.configuration.HttpConnection$AuthenticationMethod
+        default: Basic
+        enum-values:
+          - Basic

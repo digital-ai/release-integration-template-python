@@ -31,10 +31,18 @@ build_jar(){
 
     sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/plugin-version.properties
     sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/plugin-version.properties
-    sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
-    sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
-    sed -i '' 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
-    sed -i '' 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
+    if [ -s tmp/synthetic.xml ]; then
+      sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
+      sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
+      sed -i '' 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
+      sed -i '' 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
+    fi
+    if [ -s tmp/type-definitions.yaml ]; then
+      sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
+      sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.yaml
+      sed -i '' 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.yaml
+      sed -i '' 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.yaml
+    fi
 
   elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
     echo "Detected GNU/Linux platform"
@@ -45,7 +53,12 @@ build_jar(){
     sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
     sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
     sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
+    sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
+    sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.yaml
+    sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.yaml
+    sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.yaml
     rm tmp/synthetic.xml.bak
+    rm tmp/type-definitions.yaml.bak
     rm tmp/plugin-version.properties.bak
   fi
 
