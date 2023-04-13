@@ -35,17 +35,34 @@ goto :eof
     xcopy /E /I resources tmp
 
     :: Replace placeholders in synthetic.xml with values from project.properties
-    (for /f "delims=" %%i in (tmp\synthetic.xml) do (
-        set "line=%%i"
-        setlocal enabledelayedexpansion
-        set "line=!line:@project.name@=%PLUGIN%!"
-        set "line=!line:@project.version@=%VERSION%!"
-        set "line=!line:@registry.url@=%REGISTRY_URL%!"
-        set "line=!line:@registry.org@=%REGISTRY_ORG%!"
-        echo(!line!
-        endlocal
-    ))>"tmp\synthetic.xml.bak"
-    move tmp\synthetic.xml.bak tmp\synthetic.xml
+    if exist "tmp\synthetic.xml" (
+        (for /f "delims=" %%i in (tmp\synthetic.xml) do (
+            set "line=%%i"
+            setlocal enabledelayedexpansion
+            set "line=!line:@project.name@=%PLUGIN%!"
+            set "line=!line:@project.version@=%VERSION%!"
+            set "line=!line:@registry.url@=%REGISTRY_URL%!"
+            set "line=!line:@registry.org@=%REGISTRY_ORG%!"
+            echo(!line!
+            endlocal
+        ))>"tmp\synthetic.xml.bak"
+        move tmp\synthetic.xml.bak tmp\synthetic.xml
+    )
+
+    :: Replace placeholders in type-definitions.yaml with values from project.properties
+    if exist "tmp\type-definitions.yaml" (
+        (for /f "delims=" %%i in (tmp\type-definitions.yaml) do (
+            set "line=%%i"
+            setlocal enabledelayedexpansion
+            set "line=!line:@project.name@=%PLUGIN%!"
+            set "line=!line:@project.version@=%VERSION%!"
+            set "line=!line:@registry.url@=%REGISTRY_URL%!"
+            set "line=!line:@registry.org@=%REGISTRY_ORG%!"
+            echo(!line!
+            endlocal
+        ))>"tmp\type-definitions.yaml.bak"
+        move tmp\type-definitions.yaml.bak tmp\type-definitions.yaml
+    )
 
     :: Replace placeholders in plugin-version.properties with values from project.properties
     (for /f "delims=" %%i in (tmp\plugin-version.properties) do (
