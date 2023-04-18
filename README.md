@@ -44,13 +44,13 @@ Now initialize the Git repository with this name and note the url.
 **HTTPS:**
 
 ```commandline
-git clone --bare https://github.com/xebialabs/release-integration-template-python.git release-integration-temp
+git clone --bare https://github.com/digital-ai/release-integration-template-python.git release-integration-temp
 ```
 
 **SSH:**
 
 ```commandline
-git clone --bare git@github.com:xebialabs/release-integration-template-python.git release-integration-temp
+git clone --bare git@github.com:digital-ai/release-integration-template-python.git release-integration-temp
 ```
 
 3. Mirror-push to the new repository.
