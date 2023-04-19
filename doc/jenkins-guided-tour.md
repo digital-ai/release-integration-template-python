@@ -4,26 +4,26 @@
 ## How to define a Server in synthetic.xml
 
   ```xml
-      <type type="ContainerJenkins.Server" extends="configuration.HttpConnection" description="Configure Jenkins Server.">
-          <property name="apiToken" password="true" label="API Token" description="Username is required if using API Token" required="false"
-                    category="Authentication"/>
-          <property name="domain" default="empty" hidden="true"/>
-          <property name="clientId" default="empty" hidden="true"/>
-          <property name="clientSecret" default="empty" hidden="true" password="true"/>
-          <property name="scope" default="empty" hidden="true"/>
-          <property name="accessTokenUrl" default="empty" hidden="true"/>
-          <property name="authenticationMethod" kind="enum"
-                    enum-class="com.xebialabs.xlrelease.domain.configuration.HttpConnection$AuthenticationMethod"
-                    hidden="true" default="Basic">
-              <enum-values>
-                  <value>Basic</value>
-              </enum-values>
-          </property>
-          <property name="retryCount" kind="integer" category="Build" required="false" default="5"
-                    description="Number of retries connection with jenkins"/>
-          <property name="retryWaitingTime" kind="integer" category="Build" required="false" default="10"
-                    description="Waiting time for retry in sec"/>
-      </type>
+    <type type="ContainerJenkins.Server" extends="configuration.HttpConnection" description="Configure Jenkins Server." label="Jenkins: Server (Container)">
+        <property name="apiToken" password="true" label="API Token" description="Username is required if using API Token" required="false"
+                  category="Authentication"/>
+        <property name="domain" default="empty" hidden="true"/>
+        <property name="clientId" default="empty" hidden="true"/>
+        <property name="clientSecret" default="empty" hidden="true" password="true"/>
+        <property name="scope" default="empty" hidden="true"/>
+        <property name="accessTokenUrl" default="empty" hidden="true"/>
+        <property name="authenticationMethod" kind="enum"
+                  enum-class="com.xebialabs.xlrelease.domain.configuration.HttpConnection$AuthenticationMethod"
+                  hidden="true" default="Basic">
+            <enum-values>
+                <value>Basic</value>
+            </enum-values>
+        </property>
+        <property name="retryCount" kind="integer" category="Build" required="false" default="5"
+                  description="Number of retries connection with jenkins"/>
+        <property name="retryWaitingTime" kind="integer" category="Build" required="false" default="10"
+                  description="Waiting time for retry in sec"/>
+    </type>
   ```
 * The given XML defines a type called **ContainerJenkins.Server** which extends the pre-defined type **configuration.HttpConnection**. This type is used for configuring a Jenkins server.
 * Some of these properties are not relevant for Jenkins integration, and hence are **hidden** using the hidden attribute set to **true**.
@@ -39,7 +39,7 @@
       <property name="iconLocation" default="jenkins.png" hidden="true"/>
       <property name="taskColor" hidden="true" default="#667385"/>
   </type>
-  <type type="ContainerJenkins.JenkinsBuild" extends="ContainerJenkins.BaseTask" description="Configure Jenkins build.">
+  <type type="ContainerJenkins.JenkinsBuild" extends="ContainerJenkins.BaseTask" description="Configure Jenkins build." label="Jenkins: Build (Container)">
       <property name="jenkinsServer" category="input" label="Server" referenced-type="ContainerJenkins.Server" kind="ci" description="Jenkins server to connect to"/>
       <property name="jobName" category="input"
                 description="Name of the job to trigger; this job must be configured on the Jenkins server"/>
@@ -57,8 +57,9 @@
 ## Explains JenkinsBuild class
 
 * The **JenkinsBuild** class is a subclass of **BaseTask** and is responsible for launching and monitoring a Jenkins build job.
-* **init(self, params)** initializes the class with the **params** dictionary passed to it. It sets several instance variables, including the Jenkins server URL, authentication credentials, and job parameters. It also sets default values for retry waiting time and maximum retry attempts.
+* **init(self)** initializes the class. It sets several instance variables.
 * **execute(self)** method is the main method of the class. This method is an implementation of the abstract method **execute()** defined in the BaseTask class. It calls several other methods to handle the different stages of a Jenkins build job:
+    * **initialize_variables(self)** method initializes variables for the JenkinsBuild
     * **handle_multibranch_job(self)** method checks if the job is a multibranch pipeline and sets the job URL accordingly.
     * **launch_build(self)** method launches the build with the given parameters or without parameters, as specified in the class instance. It sets a Jenkins crumb header and makes a POST request to the build URL. It also sets the **queue_url** instance variable and raises an exception if the build job is aborted.
     * **wait_for_build_start(self)** method waits for the build to start by checking the status of the build in the build queue. It retries for a maximum number of attempts if the build does not start, and sets the **build_number** instance variable if the build starts successfully. It also sets the **build_url** instance variable.
@@ -72,39 +73,50 @@
   ```python
     class JenkinsBuild(BaseTask):
 
-    def __init__(self, params):
-        super().__init__()
-        self.params = params
-        if not self.params['jenkinsServer']:
-            raise ValueError("Server field cannot be empty")
-        self.server = params['jenkinsServer']
-        self.jenkins_url = self.server['url'].strip("/")
-        self.auth = (
-            self.server['username'], self.server['apiToken'] if self.server['apiToken'] else self.server['password'])
-        self.job_name = params['jobName'].strip("/")
-        self.job_params = params['jobParameters']
-        self.job_branch = params['branch']
-        self.retry_waiting_time = self.server['retryWaitingTime']
-        self.max_retry_attempts = self.server['retryCount']
-        self.job_url = self.prepare_job_url()
-        self.headers = None
-
-    def launch_build(self):
-        if self.job_params:
-            url = f"{self.jenkins_url}/job/{self.job_url}/buildWithParameters"
-        else:
-            url = f"{self.jenkins_url}/job/{self.job_url}/build"
-        self.set_jenkins_crumb_header()
-        response = requests.post(url, auth=self.auth, params=self.build_job_params(), headers=self.headers)
-        response.raise_for_status()
+      def __init__(self):
+          self.server = None
+          self.jenkins_url = None
+          self.auth = None
+          self.job_name = None
+          self.job_params = None
+          self.job_branch = None
+          self.retry_waiting_time = None
+          self.max_retry_attempts = None
+          self.job_url = None
+          self.aborted = False
+          self.queue_url = None
+          self.build_number = None
+          self.build_url = None
+          self.build_status = None
+          self.headers = None
+          self.retry_attempts = 0
+          
+      def initialize_variables(self):
+          self.job_name = self.input_properties['jobName'].strip("/")
+          self.job_params = self.input_properties['jobParameters']
+          self.job_branch = self.input_properties['branch']
+          if not self.input_properties['jenkinsServer']:
+              raise ValueError("Server field cannot be empty")
+          self.server = self.input_properties['jenkinsServer']
+          self.jenkins_url = self.server['url'].strip("/")
+          self.auth = (
+              self.server['username'],
+              self.server['apiToken'] if self.server['apiToken'] else self.server['password'])
+          self.retry_waiting_time = self.server['retryWaitingTime']
+          self.max_retry_attempts = self.server['retryCount']
+          
+      def launch_build(self):
+          if self.job_params:
+              url = f"{self.jenkins_url}/job/{self.job_url}/buildWithParameters"
+          else:
+              url = f"{self.jenkins_url}/job/{self.job_url}/build"
+          self.set_jenkins_crumb_header()
+          response = requests.post(url, auth=self.auth, params=self.build_job_params(), headers=self.headers)
+          response.raise_for_status()
   ```
 * In above code snippet, designed to launch a Jenkins build by making a REST API call to a Jenkins server.
-* The **__init__()** method is the class constructor, which initializes various instance variables using the params dictionary passed to the class constructor.
-* The params dictionary contains the following keys:
-    * **jenkinsServer**: A dictionary containing information about the Jenkins server, including its URL, username, password, and API token.
-    * **jobName**: The name of the Jenkins job to be executed.
-    * **jobParameters**: A dictionary of job parameters to be passed to the Jenkins job.
-    * **branch**: The branch name for the job.
+* The **__init__()** method is the class constructor, which declare the various instance variables.
+* The **initialize_variables()** method initializes variables using the input properties.
 * The **launch_build()** method is used to actually launch the Jenkins build. It first constructs the URL for the Jenkins build based on the job_url, jenkins_url, and job_params instance variables. It then calls the set_jenkins_crumb_header() method to set a security crumb header, and makes a **POST** request to the Jenkins server using the **requests** library.
 
 ##  How to model a long-running task using Python3 constructs
