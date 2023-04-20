@@ -25,7 +25,7 @@ build_jar(){
   # Copy the resources directory contents to tmp
   cp -R resources/. tmp/
 
-  # Replace placeholders in synthetic.xml & plugin-version.properties with values from project.properties
+  # Replace placeholders in synthetic.xml/type-definitions.yaml & plugin-version.properties with values from project.properties
   if [ "$(uname)" = "Darwin" ]; then
     echo "Detected MAC OS X platform"
 
@@ -49,16 +49,20 @@ build_jar(){
 
     sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/plugin-version.properties
     sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/plugin-version.properties
-    sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
-    sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
-    sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
-    sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
-    sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
-    sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.yaml
-    sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.yaml
-    sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.yaml
-    rm tmp/synthetic.xml.bak
-    rm tmp/type-definitions.yaml.bak
+    if [ -s tmp/synthetic.xml ]; then
+      sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
+      sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
+      sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
+      sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
+      rm tmp/synthetic.xml.bak
+    fi
+    if [ -s tmp/type-definitions.yaml ]; then
+      sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
+      sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.yaml
+      sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.yaml
+      sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.yaml
+      rm tmp/type-definitions.yaml.bak
+    fi
     rm tmp/plugin-version.properties.bak
   fi
 
