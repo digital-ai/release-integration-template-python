@@ -39,7 +39,7 @@ Now initialize the Git repository with this name and note the url.
 ### Clone and duplicate
 
 1. Open Terminal.
-2. Create a bare clone of this repository.
+2. Create a bare clone of the template repository.
 
 **HTTPS:**
 
