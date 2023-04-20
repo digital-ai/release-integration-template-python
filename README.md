@@ -101,11 +101,18 @@ docker compose up -d --build
 
 The Release server needs to be able to find the container images of the integration you are creating. In order to do so the development setup has its own registry running inside Docker. Add the address of the registry to your local machine's `hosts` file.
 
-Add the following entry to `/etc/hosts`:
+**Unix / macOS**
+
+Add the following entry to `/etc/hosts` (sudo privileges is required to edit):
 
     127.0.0.1 container-registry
 
-XXX Add: instructions for Linux / MacOS and Windows and mention that you need sudo privileges to edit
+**Windows**
+
+Add the following entry to 'C:\Windows\System32\drivers\etc\hosts' (Run as administrator permission is required to edit):
+
+    127.0.0.1 container-registry
+
 
 ### 3. Build & publish the plugin
 
