@@ -9,7 +9,7 @@ class ServerQuery(BaseTask):
 
     def execute(self) -> None:
 
-        # Build request from input
+        # Process input
         server = self.input_properties['server']
         if server is None:
             raise ValueError("Server field cannot be empty")

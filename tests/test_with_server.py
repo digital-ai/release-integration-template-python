@@ -3,9 +3,9 @@ import unittest
 from src.sample_server_task import ServerQuery
 
 
-class TestDummyJson(unittest.TestCase):
+class TestServerQuery(unittest.TestCase):
 
-    def test_dummy_json(self):
+    def test_server_query(self):
 
         # Given
         task = ServerQuery()

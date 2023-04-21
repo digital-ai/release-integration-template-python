@@ -142,7 +142,7 @@ Then:
 * Refresh the UI by pressing Reload in the browser.
 
 ### 5. Test it!
-Create a template with the task **Example: Hello** and run it!
+Create a template with the task **Container Example: Hello** and run it!
 
 _XXX Expand_
 
