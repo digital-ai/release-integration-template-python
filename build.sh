@@ -104,5 +104,3 @@ else
   build_jar
   build_image
 fi
-
-
