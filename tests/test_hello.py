@@ -1,6 +1,5 @@
 import unittest
 
-from digitalai.release.integration import OutputContext
 from src.hello import Hello
 
 

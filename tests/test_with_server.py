@@ -1,7 +1,6 @@
 import unittest
 
-from digitalai.release.integration import OutputContext
-from src.dummy_json import DummyJson
+from src.sample_server_task import ServerQuery
 
 
 class TestDummyJson(unittest.TestCase):
@@ -9,7 +8,7 @@ class TestDummyJson(unittest.TestCase):
     def test_dummy_json(self):
 
         # Given
-        task = DummyJson()
+        task = ServerQuery()
         task.input_properties = {
             'task_id': 'task_1',
             'productId': '1',

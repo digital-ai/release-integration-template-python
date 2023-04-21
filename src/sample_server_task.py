@@ -2,7 +2,7 @@ import requests
 from digitalai.release.integration import BaseTask
 
 
-class DummyJson(BaseTask):
+class ServerQuery(BaseTask):
     """
         Fetches product details from a remote server
     """

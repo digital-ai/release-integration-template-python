@@ -31,7 +31,7 @@
         <property name="message" category="input" kind="string" description="This message will appear as a banner in the Release UI. Admin access required."/>
     </type>
 
-    <type type="containerExamples.DummyJson" extends="containerExamples.BaseTask" description="Simple API task">
+    <type type="containerExamples.ServerQuery" extends="containerExamples.BaseTask" description="Simple API task">
         <property name="server" category="input" referenced-type="containerExamples.Server" kind="ci"/>
         <property name="productId" category="input" kind="string" default="1"/>
         <property name="productName" kind="string" category="output"/>
@@ -53,6 +53,5 @@
             </enum-values>
         </property>
     </type>
-
 
 </synthetic>
