@@ -4,7 +4,7 @@ services:
   digitalai-release:
     build: digitalai-release
     ports:
-      - 5516:5516
+      - "5516:5516"
     environment:
       - ADMIN_PASSWORD=admin
       - ACCEPT_EULA=Y
@@ -24,14 +24,14 @@ services:
   container-registry:
     image: registry:2
     ports:
-      - 5050:5000
+      - "5050:5000"
     volumes:
       - .:/var/lib/registry
 
   container-registry-ui:
     image: parabuzzle/craneoperator:latest
     ports:
-      - 8086:80
+      - "8086:80"
     environment:
       - REGISTRY_HOST=container-registry
       - REGISTRY_PORT=5000
