@@ -1,3 +1,5 @@
+# JSON Schema: https://raw.githubusercontent.com/digital-ai/release-api/main/synthetic-type-definitions/type-definition-schema.json
+#
 # Yaml-based format to define types in Release, as an alternative to synthetic.xml
 # This format is in Tech Preview in Release 23.1 and may change in future versions.
 #
@@ -7,6 +9,8 @@
 
 types:
 
+  # All tasks in this project extend the BaseTask.
+  # Defines the container image location and color/icon for all tasks
   containerExamples.BaseTask:
     extends: xlrelease.ContainerTask
     virtual: true
@@ -19,6 +23,8 @@ types:
       taskColor: "#667385"
 
 
+  # Simple example task.
+  # The Python SDK will look for a corresponding Python class called 'Hello'
   containerExamples.Hello:
     extends: containerExamples.BaseTask
     description: "Simple greeter task"
@@ -34,6 +40,7 @@ types:
         kind: string
 
 
+  # Example task that interacts with the Release API
   containerExamples.SetSystemMessage:
     extends: containerExamples.BaseTask
     description: Simple API task
@@ -44,6 +51,7 @@ types:
         kind: string
 
 
+  # Example task that interacts with a third-aprty server
   containerExamples.ServerQuery:
     extends: containerExamples.BaseTask
     description: Simple API task
@@ -63,6 +71,7 @@ types:
         kind: string
 
 
+  # Example server definition
   containerExamples.Server:
     extends: configuration.BasicAuthHttpConnection
 
