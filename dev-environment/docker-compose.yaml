@@ -17,7 +17,7 @@ services:
     build: digitalai-release-setup
     depends_on:
       - digitalai-release
-    command: ["apply", "-v", "-f", "/data/docker-runner.yaml"]
+    command: ["apply", "-v", "-f", "/data/instance-configuration.yaml"]
     volumes:
       - ./digitalai-release-setup:/data:ro
 
