@@ -1,8 +1,8 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 RUN apk add --no-cache curl
 
-RUN curl --fail-early -o /usr/local/bin/xl https://s3.amazonaws.com/xl-cli/bin/22.3.0/linux-amd64/xl && \
+RUN curl --fail-early -o /usr/local/bin/xl https://dist.xebialabs.com/public/xl-cli/22.3.9/linux-amd64/xl && \
     chmod +x /usr/local/bin/xl
 
 RUN curl --fail-early -o /usr/local/bin/wait-for https://raw.githubusercontent.com/eficode/wait-for/master/wait-for && \
