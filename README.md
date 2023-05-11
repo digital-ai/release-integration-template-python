@@ -8,7 +8,7 @@ _See [How to create a new project](#how-to-create-a-new-project) below_
 
 # Digital.ai Release integration to TARGET by PUBLISHER
 
-⮕ Insert description here ⬅
+⮕ Insert description here
 
 ---
 ## How to build and run
