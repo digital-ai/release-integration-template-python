@@ -15,7 +15,7 @@ ENV OUTPUT_LOCATION /output
 # RUN apk update && apk upgrade && apk add gcc g++
 
 # copy the src directory to the image
-COPY src $APP_HOME/
+COPY src/ $APP_HOME/src/
 
 # copy the requirements.txt to the image
 COPY requirements.txt $APP_HOME/
