@@ -6,10 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # run Python in unbuffered mode
 ENV PYTHONUNBUFFERED 1
 
-# define environment variables for the application path, input location, and output location
+# define environment variable for the application path
 ENV APP_HOME /app
-ENV INPUT_LOCATION /input
-ENV OUTPUT_LOCATION /output
 
 # If needed, update the package manager and install the GCC and G++ compilers
 # RUN apk update && apk upgrade && apk add gcc g++
