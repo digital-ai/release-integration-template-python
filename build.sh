@@ -1,9 +1,9 @@
 #!/bin/bash
-# This script is used to build a jar and/or a docker image of a plugin.
+# This script is used to build a zip and/or a docker image of a plugin.
 # The script takes in one optional argument:
-# --jar: build only the jar file
+# --zip: build only the zip file
 # --image: build only the docker image
-# If no argument is passed, both jar and image will be built.
+# If no argument is passed, both zip and image will be built.
 
 read_properties(){
   # Remove the tmp directory and create it again
@@ -20,22 +20,22 @@ read_properties(){
   rm tmp/project.properties
 }
 
-build_jar(){
+build_zip(){
 
   # Copy the resources directory contents to tmp
   cp -R resources/. tmp/
 
-  # Replace placeholders in synthetic.xml/type-definitions.yaml & plugin-version.properties with values from project.properties
+  # Replace placeholders in type-definitions.xml/type-definitions.yaml & plugin-version.properties with values from project.properties
   if [ "$(uname)" = "Darwin" ]; then
     echo "Detected MAC OS X platform"
 
     sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/plugin-version.properties
     sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/plugin-version.properties
-    if [ -s tmp/synthetic.xml ]; then
-      sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
-      sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
-      sed -i '' 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
-      sed -i '' 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
+    if [ -s tmp/type-definitions.xml ]; then
+      sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.xml
+      sed -i '' 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.xml
+      sed -i '' 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.xml
+      sed -i '' 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.xml
     fi
     if [ -s tmp/type-definitions.yaml ]; then
       sed -i '' 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
@@ -49,12 +49,12 @@ build_jar(){
 
     sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/plugin-version.properties
     sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/plugin-version.properties
-    if [ -s tmp/synthetic.xml ]; then
-      sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/synthetic.xml
-      sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/synthetic.xml
-      sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/synthetic.xml
-      sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/synthetic.xml
-      rm tmp/synthetic.xml.bak
+    if [ -s tmp/type-definitions.xml ]; then
+      sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.xml
+      sed -i.bak 's/@project.version@/'"$VERSION"'/g' tmp/type-definitions.xml
+      sed -i.bak 's/@registry.url@/'"$REGISTRY_URL"'/g' tmp/type-definitions.xml
+      sed -i.bak 's/@registry.org@/'"$REGISTRY_ORG"'/g' tmp/type-definitions.xml
+      rm tmp/type-definitions.xml.bak
     fi
     if [ -s tmp/type-definitions.yaml ]; then
       sed -i.bak 's/@project.name@/'"$PLUGIN"'/g' tmp/type-definitions.yaml
@@ -66,13 +66,13 @@ build_jar(){
     rm tmp/plugin-version.properties.bak
   fi
 
-  # Create the build directory and remove any previously created jar file
+  # Create the build directory and remove any previously created zip file
   mkdir build 2>/dev/null
-  rm -f "build/$PLUGIN-$VERSION.jar" 2>/dev/null
+  rm -f "build/$PLUGIN-$VERSION.zip" 2>/dev/null
 
-  # Create a jar file from the contents of the tmp directory and place it in the build directory
-  cd tmp && zip -r "../build/$PLUGIN-$VERSION.jar" . && cd ..
-  echo "Build completed: $PLUGIN-$VERSION.jar"
+  # Create a zip file from the contents of the tmp directory and place it in the build directory
+  cd tmp && zip -r "../build/$PLUGIN-$VERSION.zip" . && cd ..
+  echo "Build completed: $PLUGIN-$VERSION.zip"
   # Remove the tmp directory
   rm -rf tmp
 }
@@ -90,17 +90,17 @@ build_image(){
   fi
 }
 
-if [ "$1" = "--jar" ]; then
-  echo "Building jar..."
+if [ "$1" = "--zip" ]; then
+  echo "Building zip..."
   read_properties
-  build_jar
+  build_zip
 elif [ "$1" = "--image" ]; then
   echo "Building image..."
   read_properties
   build_image
 else
-  echo "Building jar and image..."
+  echo "Building zip and image..."
   read_properties
-  build_jar
+  build_zip
   build_image
 fi

@@ -1,11 +1,11 @@
 # JSON Schema: https://raw.githubusercontent.com/digital-ai/release-api/main/synthetic-type-definitions/type-definition-schema.json
 #
-# Yaml-based format to define types in Release, as an alternative to synthetic.xml
+# Yaml-based format to define types in Release, as an alternative to synthetic.xml or type-definitions.xml
 # This format is in Tech Preview in Release 23.1 and may change in future versions.
 #
-# You can also use synthetic.xml to define types. Note that contents of the two files
+# You can also use synthetic.xml or type-definitions.xml to define types. Note that contents of the two files
 # are merged. This means that you can't have the same type definition in both
-# type-definitions.yaml and synthetic.xml at the same time.
+# type-definitions.yaml and synthetic.xml or type-definitions.xml at the same time.
 
 types:
 
