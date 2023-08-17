@@ -1,31 +1,18 @@
+# Use the Python image as the base
 FROM python:alpine3.17
 
-# prevent Python from writing bytecode files
+# Prevent Python from writing bytecode files and run in unbuffered mode
 ENV PYTHONDONTWRITEBYTECODE 1
-
-# run Python in unbuffered mode
 ENV PYTHONUNBUFFERED 1
 
-# define environment variable for the application path
-ENV APP_HOME /app
+# Set the working directory in the container
+WORKDIR /app
 
-# If needed, update the package manager and install the GCC and G++ compilers
-# RUN apk update && apk upgrade && apk add gcc g++
+# Copy the source code into the container
+COPY . .
 
-# copy the src directory to the image
-COPY src $APP_HOME/
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# copy the requirements.txt to the image
-COPY requirements.txt $APP_HOME/
-
-# set the working directory to the app directory
-WORKDIR $APP_HOME
-
-# If needed, upgrade pip
-# RUN pip install --upgrade pip
-
-# install the dependencies from the requirements.txt file
-RUN pip install -r requirements.txt
-
-# set the entrypoint for the container
-ENTRYPOINT ["python", "-m", "digitalai.release.integration.wrapper"]
+# Set the entrypoint command
+CMD ["python", "-m", "digitalai.release.integration.wrapper"]
