@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+##############################################################################
+##
+##  XL Cli wrapper script for Linux/Darwin
+##
+##############################################################################
+
+die ( ) {
+    echo "$*"
+    exit 1
+}
+
+# detecting program dir
+PROG_DIR="$(cd "$(dirname "${0:-$PWD}")" 2>/dev/null 1>&2 && pwd)"
+
+source "${PROG_DIR}/.xebialabs/wrapper.conf" || die "Could not read .xebialabs/wrapper.conf"
+
+XL_WRAPPER_HOME="${HOME}/.xebialabs/wrapper/${CLI_VERSION}"
+
+# checking OS
+BINARY_TYPE="unknown"
+case "`uname`" in
+  Darwin* )
+    BINARY_TYPE="darwin-amd64"
+    ;;
+  Linux* )
+    BINARY_TYPE="linux-amd64"
+    ;;
+esac
+
+if [ ${BINARY_TYPE} = "unknown" ] ; then
+    die "Unsupported OS `uname`"
+fi
+
+# find target location
+if [ ! -d "${XL_WRAPPER_HOME}" ] ; then
+  mkdir -p "${XL_WRAPPER_HOME}" || die "Could not create wrapper home at: $XL_WRAPPER_HOME"
+fi
+
+# if xl does not exist download it
+XL_BIN="${XL_WRAPPER_HOME}/xl"
+if [ ! -f "${XL_BIN}" ] ; then
+  echo "Downloading xl binary to ${XL_BIN}"
+  DOWNLOAD_URL="${CLI_BASE_URL}/${CLI_VERSION}/${BINARY_TYPE}/xl"
+  curl -fLsSo "${XL_BIN}.$$" "${DOWNLOAD_URL}" || die "Could not download xl binary from: $DOWNLOAD_URL"
+  chmod +x "${XL_BIN}.$$" || die "Could not make xl binary executable"
+  mv "${XL_BIN}.$$" "${XL_BIN}" || die "Could not move xl binary to home folder"
+fi
+
+# now run xl cli
+exec "${XL_BIN}" "$@"
