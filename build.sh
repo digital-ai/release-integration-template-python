@@ -92,8 +92,8 @@ build_image(){
 
 upload_zip(){
   # upload the zip to the release server
-  chmod +x xlw
-  xlw plugin release install --file build/%PLUGIN%-%VERSION%.zip --config .xebialabs/config.yaml
+  chmod +x ./xlw
+  ./xlw plugin release install --file build/$PLUGIN-$VERSION.zip --config .xebialabs/config.yaml
 }
 
 if [ "$1" = "--zip" ]; then
