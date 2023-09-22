@@ -3,7 +3,8 @@
 :: The script takes in one optional argument:
 :: --zip: build only the zip file
 :: --image: build only the docker image
-:: If no argument is passed, both the zip and image will be built and uploaded zip to release server.
+:: --upload: both the zip and image will be built and uploaded zip to the release server
+:: If no argument is passed, both the zip and image will be built
 
 if "%1" == "--zip" (
     echo Building zip...
