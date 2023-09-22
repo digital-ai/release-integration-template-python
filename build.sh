@@ -104,10 +104,15 @@ elif [ "$1" = "--image" ]; then
   echo "Building image..."
   read_properties
   build_image
-else
+elif [ "$1" = "--upload" ]; then
   echo "Building zip, image and Uploading zip..."
   read_properties
   build_zip
   build_image
   upload_zip
+else
+  echo "Building zip and image..."
+  read_properties
+  build_zip
+  build_image
 fi

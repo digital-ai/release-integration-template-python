@@ -13,12 +13,17 @@ if "%1" == "--zip" (
     echo Building image...
     call :read_properties
     call :build_image
-) else (
+) else if "%1" == "--upload" (
     echo Building zip, image and Uploading zip...
     call :read_properties
     call :build_zip
     call :build_image
     call :upload_zip
+)else (
+    echo Building zip and image...
+    call :read_properties
+    call :build_zip
+    call :build_image
 )
 goto :eof
 
