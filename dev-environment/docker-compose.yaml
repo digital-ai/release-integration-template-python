@@ -9,9 +9,6 @@ services:
       - ADMIN_PASSWORD=admin
       - ACCEPT_EULA=Y
       - SERVER_URL=http://host.docker.internal:5516
-    user: root  # Needed for docker runner
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Needed for docker runner
 
   digitalai-release-setup:
     build: digitalai-release-setup
@@ -20,6 +17,19 @@ services:
     command: ["apply", "-v", "-f", "/data/instance-configuration.yaml"]
     volumes:
       - ./digitalai-release-setup:/data:ro
+
+  digitalai-release-remote-runner:
+    build: digitalai-release-remote-runner
+    depends_on:
+      - digitalai-release-setup
+    environment:
+      - RELEASE_RUNNER_RELEASE_URL=${RELEASE_RUNNER_RELEASE_URL}
+      - PROJECT_NAME=${RUNNER_PROJECT_NAME}
+      - VERSION=${RUNNER_PROJECT_VERSION}
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp:/tmp
 
   container-registry:
     image: registry:2
