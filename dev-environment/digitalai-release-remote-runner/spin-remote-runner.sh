@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MAX_WAIT_SECONDS=300
+MAX_WAIT_SECONDS=600
 WAIT_INTERVAL=5
 
 start_time=$(date +%s)
