@@ -1,3 +1,2 @@
---extra-index-url https://test.pypi.org/simple/
-digitalai-release-sdk == 23.1.4
+digitalai-release-sdk==23.3.0rc1
 requests >= 2.28.1

@@ -67,15 +67,33 @@ sh build.sh
 build.bat 
 ```
 
-This builds the jar and the container image and pushes the image to the configured registry.
+This builds the zip and the container image and pushes the image to the configured registry.
 
 ### Install plugin into Release
 
-In the Release UI, use the Plugin Manager interface to upload the jar from `build`.
-The jar takes the name of the project, for example `release-integration-template-python-1.0.0.jar`.
+There are two ways to install the plugin into Release.
+
+**Install plugin via commandline**
+
+Update the Release server details in `[publisher]-release-[target]-integration/.xebialabs/config.yaml`
+
+Run the command for Unix / macOS:
+```commandline
+sh build.sh --upload 
+```
+
+Run the command for Windows:
+```commandline
+build.bat --upload 
+```
+The above command builds the zip and image and uploads the zip to the release server.
+
+**Install plugin via Release server UI**
+
+In the Release UI, use the Plugin Manager interface to upload the zip from `build`.
+The zip takes the name of the project, for example `release-integration-template-python-1.0.0.zip`.
 
 Then:
-* Restart Release container and wait for it to come up
 * Refresh the UI by pressing Reload in the browser.
 
 ### 5. Test it!
