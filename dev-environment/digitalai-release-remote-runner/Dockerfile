@@ -1,4 +1,4 @@
-FROM xebialabsunsupported/release-remote-runner:23.3.0-rc.1
+FROM xebialabs/release-remote-runner:23.3.0
 
 RUN apk add --no-cache curl jq
 
