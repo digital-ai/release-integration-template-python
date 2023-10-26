@@ -1,0 +1,12 @@
+build.bat
+build.sh
+xlw
+xlw.bat
+.git
+*.log
+temp/
+dev-environment/
+.xebialabs/
+.idea/
+build/
+tests/
