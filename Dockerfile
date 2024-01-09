@@ -5,6 +5,9 @@ FROM python:alpine3.17
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# Create app folder and set permissions
+RUN mkdir /app && chmod -R 777 /app
+
 # Set the working directory in the container
 WORKDIR /app
 
