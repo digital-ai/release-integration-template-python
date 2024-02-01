@@ -69,9 +69,9 @@ build.bat
 
 The above command builds the zip, creates the container image, and then pushes the image to the configured registry.
 
-`build.bat --zip` Builds only the zip.
+`build.bat --zip` Builds the zip.
 
-`build.bat --image` Builds only creates the container image, and then pushes the image to the configured registry.
+`build.bat --image` Creates the container image, and then pushes the image to the configured registry.
 
 ### Install plugin into Release
 
