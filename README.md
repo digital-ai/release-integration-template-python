@@ -79,7 +79,7 @@ There are two ways to install the plugin into Release.
 
 **Install plugin via commandline**
 
-Update the Release server details in `[publisher]-release-[target]-integration/.xebialabs/config.yaml`
+Update the Release server details in `release-integration-template-python/.xebialabs/config.yaml`
 
 Run the command for Unix / macOS:
 ```commandline
