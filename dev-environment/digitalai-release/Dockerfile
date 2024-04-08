@@ -1,4 +1,5 @@
-FROM xebialabs/xl-release:23.3
+# todo change image to official
+FROM xebialabsunsupported/xl-release:24.1
 
 # Install license
 # COPY default-conf/xl-release-license.lic /opt/xebialabs/xl-release-server/default-conf/

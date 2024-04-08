@@ -1,4 +1,5 @@
-FROM xebialabs/release-remote-runner:23.3.0
+# todo change image to official
+FROM xlr-registry:5050/digitalai/release-runner:0.2.0
 
 RUN apk add --no-cache curl jq
 
