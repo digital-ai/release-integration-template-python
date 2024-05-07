@@ -1,2 +1,2 @@
-digitalai-release-sdk == 24.1.0rc1
+digitalai-release-sdk == 24.1.0
 requests >= 2.28.1
