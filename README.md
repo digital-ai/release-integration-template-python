@@ -67,7 +67,11 @@ sh build.sh
 build.bat 
 ```
 
-This builds the zip and the container image and pushes the image to the configured registry.
+The above command builds the zip, creates the container image, and then pushes the image to the configured registry.
+
+`build.bat --zip` Builds the zip.
+
+`build.bat --image` Creates the container image, and then pushes the image to the configured registry.
 
 ### Install plugin into Release
 
@@ -75,7 +79,7 @@ There are two ways to install the plugin into Release.
 
 **Install plugin via commandline**
 
-Update the Release server details in `[publisher]-release-[target]-integration/.xebialabs/config.yaml`
+Update the Release server details in `release-integration-template-python/.xebialabs/config.yaml`
 
 Run the command for Unix / macOS:
 ```commandline
@@ -86,7 +90,7 @@ Run the command for Windows:
 ```commandline
 build.bat --upload 
 ```
-The above command builds the zip and image and uploads the zip to the release server.
+The above command builds the zip, creates the container image, pushes the image to the configured registry, and uploads the zip to the release server.
 
 **Install plugin via Release server UI**
 

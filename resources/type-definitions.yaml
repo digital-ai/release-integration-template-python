@@ -22,6 +22,19 @@ types:
       iconLocation: test.png
       taskColor: "#667385"
 
+  # All scripts in this project extend the BaseScript.
+  containerExamples.BaseScript:
+    extends: xlrelease.RemoteScriptExecution
+    virtual: true
+
+    hidden-properties:
+      image:
+        default: "@registry.url@/@registry.org@/@project.name@:@project.version@"
+        transient: true
+
+    output-properties:
+      commandResponse:
+        kind: map_string_string
 
   # Simple example task.
   # The Python SDK will look for a corresponding Python class called 'Hello'
@@ -81,3 +94,15 @@ types:
         default: https://dummyjson.com
         description: A Dummy JSON server
         required: true
+
+    hidden-properties:
+      testConnectionScript: containerExamples.TestConnection
+
+  # Example test connection script
+  containerExamples.TestConnection:
+    extends: containerExamples.BaseScript
+
+    input-properties:
+      server:
+        kind: ci
+        referenced-type: containerExamples.Server

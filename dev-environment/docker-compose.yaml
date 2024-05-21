@@ -24,8 +24,6 @@ services:
       - digitalai-release-setup
     environment:
       - RELEASE_RUNNER_RELEASE_URL=${RELEASE_RUNNER_RELEASE_URL}
-      - PROJECT_NAME=${RUNNER_PROJECT_NAME}
-      - VERSION=${RUNNER_PROJECT_VERSION}
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
