@@ -37,15 +37,20 @@ services:
       - .:/var/lib/registry
 
   container-registry-ui:
-    image: parabuzzle/craneoperator:latest
+    image: joxit/docker-registry-ui:latest
     ports:
       - "8086:80"
     environment:
-      - REGISTRY_HOST=container-registry
-      - REGISTRY_PORT=5000
-      - REGISTRY_PROTOCOL=http
-      - REGISTRY_ALLOW_DELETE=true
-      - SSL_VERIFY=false
-      - TITLE=Digital.ai Release Docker Registry
+      - SINGLE_REGISTRY=true
+      - REGISTRY_TITLE=Digital.ai Release Docker Registry UI
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+      - NGINX_PROXY_PASS_URL=http://container-registry:5000
+      - SHOW_CATALOG_NB_TAGS=true
+      - CATALOG_MIN_BRANCHES=1
+      - CATALOG_MAX_BRANCHES=1
+      - TAGLIST_PAGE_SIZE=100
+      - REGISTRY_SECURED=false
+      - CATALOG_ELEMENTS_LIMIT=1000
     depends_on:
       - container-registry
