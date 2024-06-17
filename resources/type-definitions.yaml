@@ -75,7 +75,7 @@ types:
         referenced-type: containerExamples.Server
       productId:
         kind: string
-        default: 1
+        default: 123
 
     output-properties:
       productName:

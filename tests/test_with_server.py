@@ -11,7 +11,7 @@ class TestServerQuery(unittest.TestCase):
         task = ServerQuery()
         task.input_properties = {
             'task_id': 'task_1',
-            'productId': '1',
+            'productId': '123',
             'server': {
                 'url': 'https://dummyjson.com',
                 'username': 'admin',
@@ -24,7 +24,7 @@ class TestServerQuery(unittest.TestCase):
         task.execute_task()
 
         # Then
-        self.assertEqual(task.get_output_properties()['productName'], 'iPhone 9')
+        self.assertEqual(task.get_output_properties()['productName'], 'iPhone 13 Pro')
 
 
 if __name__ == '__main__':
