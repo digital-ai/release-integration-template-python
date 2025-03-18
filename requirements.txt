@@ -1,1 +1,1 @@
-digitalai-release-sdk == 25.1.0b1
+digitalai-release-sdk==25.1.0b4
