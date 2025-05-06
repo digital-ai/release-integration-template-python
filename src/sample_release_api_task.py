@@ -14,6 +14,8 @@ class SetSystemMessage(BaseTask):
 
         # Get the message from the input properties
         message = self.input_properties['message']
+        if not message:
+            raise ValueError("The 'Message' field cannot be empty")
 
         # Obtain an instance of the Release API client
         release_api_client = self.get_release_api_client()
