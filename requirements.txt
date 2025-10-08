@@ -1,2 +1,2 @@
-digitalai-release-sdk==25.1.1
+digitalai-release-sdk==25.1.2
 # The 'requests' library is already included by digitalai-release-sdk; no additional entry is required.
