@@ -106,3 +106,42 @@ types:
       server:
         kind: ci
         referenced-type: containerExamples.Server
+
+  # Example lookup task
+  containerExamples.NameLookup:
+    extends: containerExamples.BaseScript
+
+    input-properties:
+      _ci:
+        kind: ci
+        referenced-type: containerExamples.BaseTask
+        required: true
+      _attributes:
+        kind: map_string_string
+        required: true
+      _parameters:
+        kind: ci
+        referenced-type: udm.Parameters
+        required: true
+
+  # Simple example task which uses lookup
+  containerExamples.HelloWithLookup:
+    extends: containerExamples.BaseTask
+    label: "Container Examples: Hello With Lookup"
+    description: Simple greeter task with lookup
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        input-hint:
+          method-ref: nameLookup
+
+    methods:
+      nameLookup:
+        delegate: remoteScriptLookup
+        script: containerExamples.NameLookup
+
+    output-properties:
+      greeting:
+        kind: string
