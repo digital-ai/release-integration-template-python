@@ -29,7 +29,7 @@ We will run Release within a local Docker environment. In the development setup,
 
 Start the Release environment with the following command
 
-```commandline
+```shell
 cd dev-environment
 docker compose up -d --build
 ```
@@ -57,8 +57,8 @@ Run the build script
 
 **Unix / macOS**
 
-```commandline
-sh build.sh 
+```shell
+./build.sh 
 ```
 
 **Windows**
@@ -82,8 +82,8 @@ There are two ways to install the plugin into Release.
 Update the Release server details in `release-integration-template-python/.xebialabs/config.yaml`
 
 Run the command for Unix / macOS:
-```commandline
-sh build.sh --upload 
+```shell
+./build.sh --upload 
 ```
 
 Run the command for Windows:
@@ -134,7 +134,7 @@ For example:
 
 In the new project, update `project.properties` with the name of the integration plugin
 
-```commandline
+```shell
 cd acme-release-example-integration
 ```
 
