@@ -36,9 +36,8 @@ types:
       commandResponse:
         kind: map_string_string
 
-  # Simple example task.
-  # The Python SDK will look for a corresponding Python class called 'Hello'
-  containerExamples.Hello:
+# Hello1 – Example without scriptLocation
+  containerExamples.Hello1:
     extends: containerExamples.BaseTask
     description: "Simple greeter task"
 
@@ -51,6 +50,87 @@ types:
     output-properties:
       greeting:
         kind: string
+
+# Hello2 – Example with script file located directly under src/
+  containerExamples.Hello2:
+    extends: containerExamples.BaseTask
+    description: "Simple greeter task"
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        default: World
+
+    hidden-properties:
+      scriptLocation:
+        default: hello2.py
+        category: script
+
+    output-properties:
+      greeting:
+        kind: string
+
+# Hello3 – Example with script file inside a subfolder (src/sample/)
+  containerExamples.Hello3:
+    extends: containerExamples.BaseTask
+    description: "Simple greeter task"
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        default: World
+
+    hidden-properties:
+      scriptLocation:
+        default: sample/hello3.py
+        category: script
+
+    output-properties:
+      greeting:
+        kind: string
+
+# Hello4 – Example where script file exists but expected class is missing
+  containerExamples.Hello4:
+    extends: containerExamples.BaseTask
+    description: "Simple greeter task"
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        default: World
+
+    hidden-properties:
+      scriptLocation:
+        default: sample/hello4.py
+        category: script
+
+    output-properties:
+      greeting:
+        kind: string
+
+# Hello5 – Example where script file is missing
+  containerExamples.Hello5:
+    extends: containerExamples.BaseTask
+    description: "Simple greeter task"
+
+    input-properties:
+      yourName:
+        description: The name to greet
+        kind: string
+        default: World
+
+    hidden-properties:
+      scriptLocation:
+        default: sample/hello5.py
+        category: script
+
+    output-properties:
+      greeting:
+        kind: string
+
 
 
   # Example task that interacts with the Release API

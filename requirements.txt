@@ -1,2 +1,3 @@
-digitalai-release-sdk==25.3.0
+#digitalai-release-sdk==25.3.0
 # The 'requests' library is already included by digitalai-release-sdk; no additional entry is required.
+git+https://github.com/digital-ai/release-integration-sdk-python@S-125588

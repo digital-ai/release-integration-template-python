@@ -1,0 +1,17 @@
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+    <type type="containerExamples.BaseTask" extends="xlrelease.ContainerTask" virtual="true">
+        <property name="image" required="true" hidden="true" default="@registry.url@/@registry.org@/@project.name@:@project.version@" transient="true"/>
+        <property name="iconLocation" default="test.png" hidden="true"/>
+        <property name="taskColor" hidden="true" default="#667385"/>
+    </type>
+
+    <type type="containerExamples.Hello2" extends="containerExamples.BaseTask" >
+        <property name="scriptLocation" default="hello2.py" hidden="true" category="script"/>
+        <property name="yourName" required="true" kind="string" category="input" default="World" />
+        <property name="greeting" required="false" kind="string" category="output" />
+    </type>
+
+</synthetic>

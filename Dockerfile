@@ -14,6 +14,9 @@ WORKDIR /app
 # Copy the source code into the container
 COPY . .
 
+# Install git
+RUN apk add --no-cache git
+
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 

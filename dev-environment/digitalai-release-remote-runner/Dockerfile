@@ -1,4 +1,4 @@
-FROM xebialabs/release-runner:25.3.1-1103.554
+FROM xebialabs/release-runner:25.3.0-930.1244
 
 USER root
 
