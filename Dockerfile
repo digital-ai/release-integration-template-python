@@ -17,5 +17,8 @@ COPY . .
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install the local release_api_client package
+RUN pip install --no-cache-dir release_api_client-26.1.0.tar.gz
+
 # Set the entrypoint command
 CMD ["python", "-m", "digitalai.release.integration.wrapper"]

@@ -64,6 +64,36 @@ types:
         kind: string
 
 
+  # Example task that uses the release_api_client to create a release,
+  # add a phase and a task to it, then start it.
+  # The Python SDK will look for a corresponding Python class called 'CreateAndStartRelease'.
+  containerExamples.CreateAndStartRelease:
+    extends: containerExamples.BaseTask
+    description: Creates a release from a template, adds a phase and a task, then starts it
+
+    input-properties:
+      releaseTitle:
+        description: Title of the release to create
+        kind: string
+        default: Demo Release 1.0.0
+      phaseTitle:
+        description: Title of the phase to add
+        kind: string
+        default: Deploy
+      taskTitle:
+        description: Title of the Jython script task to add to the phase
+        kind: string
+        default: Run Jython script
+
+    output-properties:
+      releaseId:
+        description: The id of the created release
+        kind: string
+      releaseStatus:
+        description: The status of the release after it was started
+        kind: string
+
+
   # Example task that interacts with a third-aprty server
   containerExamples.ServerQuery:
     extends: containerExamples.BaseTask
