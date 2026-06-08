@@ -79,7 +79,7 @@ types:
       phaseTitle:
         description: Title of the phase to add
         kind: string
-        default: Deploy
+        default: Run Release Automation
       taskTitle:
         description: Title of the Jython script task to add to the phase
         kind: string
