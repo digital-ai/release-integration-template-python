@@ -1,4 +1,4 @@
-digitalai-release-api-client==26.3.0b1
+digitalai-release-sdk==26.3.0b3
 # Note: no additional entries are required below.
-# - 'digitalai-release-sdk' is bundled with digitalai-release-api-client, so do not list it separately.
+# - 'digitalai-release-api-client' is bundled with digitalai-release-sdk, so do not list it separately.
 # - 'requests' is also pulled in transitively via digitalai-release-sdk, so no explicit entry is needed.

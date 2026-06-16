@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from com.xebialabs.xlrelease.api.v1.api_base_task import ApiBaseTask
+from digitalai.release.integration.api_base_task import ApiBaseTask
 from com.xebialabs.xlrelease.domain.forms import CreateRelease
 from com.xebialabs.xlrelease.domain.release import Release
 from com.xebialabs.xlrelease.domain.task import Task
