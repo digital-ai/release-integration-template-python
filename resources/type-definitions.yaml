@@ -64,9 +64,7 @@ types:
         kind: string
 
 
-  # Example task that uses the release_api_client to create a release,
-  # add a phase and a task to it, then start it.
-  # The Python SDK will look for a corresponding Python class called 'CreateAndStartRelease'.
+  # Example task that creates a release, adds a phase and a task, then starts it.
   containerExamples.CreateAndStartRelease:
     extends: containerExamples.BaseTask
     description: Creates a release from a template, adds a phase and a task, then starts it
