@@ -11,7 +11,11 @@ package-lock.json
 # Python
 src/__pycache__/
 tests/__pycache__/
+**/__pycache__/
+*.py[cod]
 venv
+.venv/
+.pytest_cache/
 
 # IntelliJ
 .shelf/

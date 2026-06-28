@@ -1,0 +1,27 @@
+[project]
+name = "release-integration-template-python"
+version = "0.0.1"
+description = "Template project for building Digital.ai Release container-based integrations in Python"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "digitalai-release-sdk==26.3.0b7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+# This project is not an installable package. Its source (src/) is shipped inside
+# a Docker image, not published to PyPI. uv manages only the local dev environment.
+# The container's runtime dependencies live in requirements.txt (used by the Dockerfile).
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "integration: tests that require network access or external services (deselect with '-m \"not integration\"')",
+]

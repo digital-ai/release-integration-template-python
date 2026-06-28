@@ -1,148 +1,186 @@
-# _Template Project for Digital.ai Release Integrations_
+# Template Project for Digital.ai Release Integrations
 
-_This project serves as a template for developing a Python-based container plugin._
+This project serves as a template for developing a Python-based **container plugin**
+for Digital.ai Release. Each task is a Python class in [`src/`](src/) that is packaged
+into a Docker image and run by Release as a container task.
 
-_See [How to create a new project](#how-to-create-a-new-project) below_
+The task code is built on the **[`digitalai-release-sdk`](https://pypi.org/project/digitalai_release_sdk/)** —
+tasks subclass its `BaseTask` (or `ApiBaseTask`) to read inputs, set outputs, and call the Release APIs.
+It is the project's main dependency and is pinned in [`requirements.txt`](requirements.txt).
+
+Building the project produces **two artifacts**:
+
+- a **plugin zip** — the plugin metadata from `resources/`, installed into Release.
+- a **Docker image** — the `src/` task code and its dependencies, pushed to a container registry and run by Release.
+
+> **Writing your own tasks?** Start with the **[Plugin Development Guide](PLUGIN_DEVELOPMENT.md)** —
+> it explains how a container plugin works, how to add a task, and how each bundled example was built.
 
 ---
 
-# Digital.ai Release integration to TARGET by PUBLISHER
+## Project layout
 
-⮕ Insert description here
+| Path                  | Purpose                                                                       |
+|-----------------------|-------------------------------------------------------------------------------|
+| `src/`                | Task implementations. **This code ships inside the Docker image.** See the [Plugin Development Guide](PLUGIN_DEVELOPMENT.md). |
+| `tests/`              | Tests for the task classes — `unit/` (fast) and `integration/` (network). Not shipped in the image. |
+| `resources/`          | Plugin metadata (`type-definitions.yaml`, icons) packaged into the plugin zip. |
+| `requirements.txt`    | Runtime dependencies installed into the Docker image. **Source of truth for the container.** |
+| `pyproject.toml`      | Local development environment, managed by [uv](https://docs.astral.sh/uv/).   |
+| `Dockerfile`          | Builds the container image that runs the tasks.                               |
+| `build.sh` / `build.bat` | Builds the plugin zip and the Docker image, and uploads them to Release.    |
+| `project.properties`  | Plugin name, version, and registry coordinates used by the build scripts.     |
+| `dev-environment/`    | A local Dockerized Release server for testing.                                |
+
+> **Note:** This is **not** a pure Python package — it is not published to PyPI.
+> The `src/` tree is copied into a Docker image and executed there by the
+> Release task wrapper.
 
 ---
-## How to build and run
 
-This section describes the quickest way to get a setup with Release to test containerized plugins using the SDK Development environment. For a production setup, please refer to the documentation. <!-- XXX insert link to documentation -->
+## Prerequisites
 
-### Prerequisites
+- [Python 3.10+](https://www.python.org/)
+- [uv](https://docs.astral.sh/uv/) — for the local development environment
+- [Docker](https://www.docker.com/) — to build and run the container image
+- [Git](https://git-scm.com/)
 
-You need to have the following installed in order to develop Python-based container tasks for Release using this project:
+Install uv:
 
-* Python 3
-* Git
-* Docker
+```sh
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-### Start Release
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
 
-We will run Release within a local Docker environment. In the development setup, the Release server will manage containerized tasks in Docker.
+---
 
-Start the Release environment with the following command
+## Development
 
-```shell
+This project uses **uv** to manage a local virtual environment for writing and
+testing tasks. The container image itself is built from `requirements.txt` (see
+[Build & publish](#build--publish)).
+
+### Set up the environment
+
+```sh
+# Creates .venv and installs runtime + dev dependencies
+uv sync --extra dev
+```
+
+### Run the tests
+
+Tests are split into [`tests/unit/`](tests/unit/) (fast, no external dependencies) and
+[`tests/integration/`](tests/integration/) (hit the network or external services, and are
+also marked with `@pytest.mark.integration`).
+
+```sh
+# Run every test
+uv run pytest
+
+# Run only the fast unit tests
+uv run pytest tests/unit          # or: uv run pytest -m "not integration"
+```
+
+Integration tests that need a live Digital.ai Release server skip themselves
+automatically when none is reachable. Point them at a server (defaults shown) with:
+
+```sh
+RELEASE_SERVER_URL=http://localhost:5516 RELEASE_USERNAME=admin RELEASE_PASSWORD=admin uv run pytest tests/integration
+```
+
+### Add a dependency
+
+Because the container is built from `requirements.txt`, a new **runtime**
+dependency must be added in **two** places so local dev matches the image:
+
+1. Add it to `requirements.txt` (used by the Dockerfile).
+2. Add it to `pyproject.toml`, then refresh the lockfile:
+
+   ```sh
+   uv add <package>     # updates pyproject.toml and uv.lock
+   ```
+
+A dev-only dependency (e.g. a test helper) goes in the `dev` extra only:
+
+```sh
+uv add --optional dev <package>
+```
+
+---
+
+## Run Release locally
+
+Run a local Release server, with its own container registry, using Docker.
+
+```sh
 cd dev-environment
 docker compose up -d --build
 ```
 
 ### Configure your `hosts` file
 
-The Release server needs to be able to find the container images of the integration you are creating. In order to do so the development setup has its own registry running inside Docker. Add the address of the registry to your local machine's `hosts` file.
+Release must be able to reach the local container registry by name. Add this entry:
 
-**Unix / macOS**
+- **macOS / Linux** — `/etc/hosts` (requires `sudo`)
+- **Windows** — `C:\Windows\System32\drivers\etc\hosts` (run as administrator)
 
-Add the following entry to `/etc/hosts` (sudo privileges is required to edit):
-
-    127.0.0.1 container-registry
-
-**Windows**
-
-Add the following entry to `C:\Windows\System32\drivers\etc\hosts` (Run as administrator permission is required to edit):
-
-    127.0.0.1 container-registry
-
-
-### Build & publish the plugin
-
-Run the build script
-
-**Unix / macOS**
-
-```shell
-./build.sh 
 ```
-
-**Windows**
-
-```commandline
-build.bat 
+127.0.0.1 container-registry
 ```
-
-The above command builds the zip, creates the container image, and then pushes the image to the configured registry.
-
-`build.bat --zip` Builds the zip.
-
-`build.bat --image` Creates the container image, and then pushes the image to the configured registry.
-
-### Install plugin into Release
-
-There are two ways to install the plugin into Release.
-
-**Install plugin via commandline**
-
-Update the Release server details in `release-integration-template-python/.xebialabs/config.yaml`
-
-Run the command for Unix / macOS:
-```shell
-./build.sh --upload 
-```
-
-Run the command for Windows:
-```commandline
-build.bat --upload 
-```
-The above command builds the zip, creates the container image, pushes the image to the configured registry, and uploads the zip to the release server.
-
-**Install plugin via Release server UI**
-
-In the Release UI, use the Plugin Manager interface to upload the zip from `build`.
-The zip takes the name of the project, for example `release-integration-template-python-1.0.0.zip`.
-
-Then:
-* Refresh the UI by pressing Reload in the browser.
-
-### 5. Test it!
-
-Create a template with the task **Container Example: Hello** and run it!
-
-### 6. Clean up
-
-Stop the development environment with the following command:
-
-    docker compose down
 
 ---
 
-## How to create a new project
+## Build & publish
 
-The  [release-integration-template-python](https://github.com/digital-ai/release-integration-template-python) repository is a template project.
+The build scripts read `project.properties`, build the plugin zip from
+`resources/`, build the Docker image from the `Dockerfile`, and push the image to
+the configured registry.
 
-On the main page of this repository, click **Use this template** button, and select **Create new repository**. This will create a duplicate of this project to start developing your own container-based integration. 
+| Command                | Result                                                        |
+|------------------------|---------------------------------------------------------------|
+| `./build.sh`           | Build the zip **and** the image, and push the image.          |
+| `./build.sh --zip`     | Build only the plugin zip.                                    |
+| `./build.sh --image`   | Build only the Docker image and push it.                      |
+| `./build.sh --upload`  | Build the zip and image, push the image, and upload the zip to Release. |
 
-**Naming conventions**
+On Windows, use `build.bat` with the same arguments.
 
-Use the following naming convention for developing Digital.ai Release integration plugins:
+---
 
-    [publisher]-release-[target]-integration
+## Install the plugin into Release
 
-Where publisher would be the name of your company.
+**Option A — command line**
 
-For example:
+Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml), then:
 
-    acme-release-example-integration
-
-### Repository configuration
-
-In the new project, update `project.properties` with the name of the integration plugin
-
-```shell
-cd acme-release-example-integration
+```sh
+./build.sh --upload        # build.bat --upload on Windows
 ```
 
-Change the following line in `project.properties`:
+**Option B — Release UI**
 
+In the Release **Plugin Manager**, upload the zip from `build/`
+(named `<PLUGIN>-<VERSION>.zip`, e.g. `release-integration-template-python-0.0.1.zip`),
+then reload the browser.
+
+---
+
+## Try it out
+
+Create a template with the **Container Examples: Hello** task and run it.
+
+When you are done, stop the local environment:
+
+```sh
+cd dev-environment
+docker compose down
 ```
-PLUGIN=acme-release-example-integration
-...
-```
 
+---
 
+## License
+
+See [License.md](License.md).
