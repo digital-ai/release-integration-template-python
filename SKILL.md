@@ -28,7 +28,8 @@ building the plugin zip + Docker image and installing into Release.
 
 A task's **type** maps to its Python **class** by the name after the dot
 (`containerExamples.Reverse` → class `Reverse`). The class name must match **exactly** and be
-**unique** across `src/`; the file name is irrelevant.
+**unique** across `src/`. Without `scriptLocation`, resolution is by class name; with
+`scriptLocation`, the path must point to the exact file under `src/`.
 → [details](AGENTS.md#the-one-rule-you-must-not-break-the-type--class-naming-contract)
 
 ## Route the request
@@ -45,6 +46,7 @@ A task's **type** maps to its Python **class** by the name after the dot
 
 - Keep `resources/type-definitions.yaml` and `src/` classes in lockstep (the naming contract).
 - Add a runtime dependency to **both** `requirements.txt` (image) and `pyproject.toml` (dev).
-- Tests are **pytest** in `tests/unit` (fast) and `tests/integration` (live, auto-skipped).
+- Tests are **pytest** in `tests/unit` (fast) and `tests/integration` (networked; Release-backed
+  tests auto-skip, third-party service tests require internet access).
   Run `uv run pytest` before building (on Windows, add `--python .venv/Scripts/python.exe` if
   uv warns about `VIRTUAL_ENV`).

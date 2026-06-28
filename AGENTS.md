@@ -29,8 +29,9 @@ wrapper:
 Therefore:
 
 - The class name **after the dot must match exactly** (case-sensitive).
-- The **file name is irrelevant** — resolution is by class name. Keep class names **unique**
-  across `src/`.
+- Without `scriptLocation`, resolution is by class name and the file name is irrelevant.
+  With `scriptLocation`, the path must point to the exact file under `src/`. Keep class names
+  **unique** across `src/`.
 - A type defined in [`resources/type-definitions.yaml`](resources/type-definitions.yaml)
   with no matching class (or vice-versa) is a bug.
 
@@ -84,9 +85,10 @@ them only with explicit intent. The normal release edit is bumping `VERSION` in
 ## Tests
 
 - [`tests/unit/`](tests/unit/) — fast, **mocked**, no network. Run in CI.
-- [`tests/integration/`](tests/integration/) — against a **live** Release server; marked
-  `@pytest.mark.integration` and **auto-skip** when none is reachable (see
-  [`tests/integration/conftest.py`](tests/integration/conftest.py)).
+- [`tests/integration/`](tests/integration/) — networked tests. Release-backed tests run against
+  a **live** Release server and **auto-skip** when none is reachable (see
+  [`tests/integration/conftest.py`](tests/integration/conftest.py)); third-party service tests
+  require internet access.
 - **Naming:** the test file mirrors its `src` module — `test_<module>.py` for unit tests,
   `test_<module>_live.py` for live integration tests.
 - Tests are **pytest** style (plain functions + `assert`, fixtures, `parametrize`,

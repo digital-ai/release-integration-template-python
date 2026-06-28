@@ -39,7 +39,7 @@ def test_creates_phase_task_and_starts_release(task):
     renamed_phase = SimpleNamespace(id=default_phase.id, title="Run Release Automation")
     added_task = SimpleNamespace(
         id="Applications/Release1/Phase1/Task1",
-        title="Run Jython script",
+        title="Run legacy Jython script",
         type="xlrelease.ScriptTask",
     )
     started = SimpleNamespace(id=release.id, status="IN_PROGRESS")
@@ -51,7 +51,7 @@ def test_creates_phase_task_and_starts_release(task):
         phases=[SimpleNamespace(
             title="Run Release Automation",
             status="IN_PROGRESS",
-            tasks=[SimpleNamespace(title="Run Jython script", status="PLANNED")],
+            tasks=[SimpleNamespace(title="Run legacy Jython script", status="PLANNED")],
         )],
     )
 
@@ -67,7 +67,7 @@ def test_creates_phase_task_and_starts_release(task):
         "task_id": "task_1",
         "releaseTitle": "Demo Release 1.0.0",
         "phaseTitle": "Run Release Automation",
-        "taskTitle": "Run Jython script",
+        "taskTitle": "Run legacy Jython script",
     }
 
     # When

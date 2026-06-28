@@ -4,7 +4,7 @@ This project serves as a template for developing a Python-based **container plug
 for Digital.ai Release. Each task is a Python class in [`src/`](src/) that is packaged
 into a Docker image and run by Release as a container task.
 
-The task code is built on the **[`digitalai-release-sdk`](https://pypi.org/project/digitalai_release_sdk/)** —
+The task code is built on the **[`digitalai-release-sdk`](https://pypi.org/project/digitalai-release-sdk/)** —
 tasks subclass its `BaseTask` (or `ApiBaseTask`) to read inputs, set outputs, and call the Release APIs.
 It is the project's main dependency and is pinned in [`requirements.txt`](requirements.txt).
 
@@ -88,7 +88,9 @@ uv run pytest tests/unit          # or: uv run pytest -m "not integration"
 ```
 
 Integration tests that need a live Digital.ai Release server skip themselves
-automatically when none is reachable. Point them at a server (defaults shown) with:
+automatically when none is reachable. Some integration tests call external
+services directly, so they require internet access. Point Release-backed tests at
+a server (defaults shown) with:
 
 ```sh
 RELEASE_SERVER_URL=http://localhost:5516 RELEASE_USERNAME=admin RELEASE_PASSWORD=admin uv run pytest tests/integration
@@ -166,7 +168,8 @@ Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.
 **Option B — Release UI**
 
 In the Release **Plugin Manager**, upload the zip from `build/`
-(named `<PLUGIN>-<VERSION>.zip`, e.g. `release-integration-template-python-0.0.1.zip`),
+(named `<PLUGIN>-<VERSION>.zip`, e.g. `publisher-release-target-integration-0.0.1.zip`
+with the current [`project.properties`](project.properties)),
 then reload the browser.
 
 ---
@@ -199,4 +202,4 @@ docker compose down
 
 ## License
 
-See [License.md](License.md).
+See [LICENSE.md](LICENSE.md).

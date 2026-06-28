@@ -357,8 +357,9 @@ Use this when you want full control of the HTTP call.
 
 **`CreateAndStartRelease` — Release API, the easy way.** An `ApiBaseTask` that chains the
 typed wrappers: `templateApi.createTemplate` → `templateApi.create` → `releaseApi.getRelease`
-→ `phaseApi.updatePhase` → `taskApi.addTask` → `releaseApi.start`. Prefer this over the
-manual client whenever you work with the Release API.
+→ `phaseApi.updatePhase` → `taskApi.addTask` → `releaseApi.start`. It deliberately adds a
+legacy `xlrelease.ScriptTask` to demonstrate creating built-in Release tasks through the API.
+Prefer this over the manual client whenever you work with the Release API.
 
 **`NameLookup` + `HelloWithLookup` — dynamic dropdowns.** `NameLookup` returns a list of
 `{label, value}` entries as `commandResponse`. `HelloWithLookup` wires its `yourName` input
@@ -384,7 +385,8 @@ def test_reverse():
 ```
 
 Tests live in [`tests/unit/`](tests/unit/) (fast, mocked) and [`tests/integration/`](tests/integration/)
-(against a live server, auto-skipped when none is reachable). Run them with:
+(networked tests; Release-backed tests auto-skip when no server is reachable, while
+third-party service tests require internet access). Run them with:
 
 ```sh
 uv run pytest               # everything
