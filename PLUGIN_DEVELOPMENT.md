@@ -6,6 +6,10 @@ bundled example was built.
 
 > New here? Read [How a container plugin works](#how-a-container-plugin-works) first,
 > then jump to [Add a new task — step by step](#add-a-new-task--step-by-step).
+>
+> **AI agents:** start with [AGENTS.md](AGENTS.md) for the conventions and guardrails, then
+> use the [`SKILL.md`](SKILL.md) skill (covers setup, adding a task, and build/deploy). This
+> guide is the detailed reference behind both.
 
 ## Contents
 
@@ -19,6 +23,9 @@ bundled example was built.
 - [The example tasks explained](#the-example-tasks-explained)
 - [Testing your task](#testing-your-task)
 - [Build, install, run](#build-install-run)
+- [The development environment](#the-development-environment)
+- [Troubleshooting](#troubleshooting)
+- [Production deployment (Kubernetes)](#production-deployment-kubernetes)
 
 ---
 
@@ -212,9 +219,11 @@ The common `kind` values used in `input-properties` / `output-properties`:
 | `kind` | Python type you receive | Notes |
 |--------|-------------------------|-------|
 | `string` | `str` | Plain text. Add `default:` for a default value. |
-| `integer` | `int` | |
-| `boolean` | `bool` | |
+| `integer` | `int` | Whole number. |
+| `boolean` | `bool` | Checkbox. |
+| `date` | `str` (ISO-8601) | Date/time value. |
 | `map_string_string` | `dict[str, str]` | Key/value pairs. |
+| `list_of_string` | `list[str]` | List of strings. |
 | `ci` | `dict` | A reference to a configuration item; use `referenced-type:` to constrain it (e.g. a server connection). |
 
 Other useful field options:
@@ -369,3 +378,79 @@ The full build/install/run instructions live in the README:
 The short version: bump `VERSION` in [`project.properties`](project.properties), run
 `./build.sh` (or `build.bat`) to build the zip + image and push the image, then
 `./build.sh --upload` to install the zip into Release. Add your task to a template and run it.
+
+---
+
+## The development environment
+
+[`dev-environment/`](dev-environment/) is a Docker Compose stack that runs a complete local
+Release setup to test plugins against:
+
+| Service | Port | Purpose |
+|---------|------|---------|
+| `digitalai-release` | `5516` | Release server (login `admin` / `admin`). |
+| `digitalai-release-setup` | — | Applies the initial instance configuration, then exits. |
+| `digitalai-release-remote-runner` | — | Runs container tasks in Docker mode (uses `network_mode: host`). |
+| `container-registry` | `5050` | Docker registry that holds your plugin images. |
+| `container-registry-ui` | `8086` | Web UI for the registry. |
+
+Start it and wait for the Release log line `Digital.ai Release has started.`, then open
+<http://localhost:5516>:
+
+```sh
+cd dev-environment
+docker compose up -d --build
+```
+
+**Hosts file.** The registry is addressed by name, so the image you push (`container-registry:5050/...`)
+resolves both when building and when Release pulls it. Add to `/etc/hosts` (Unix/macOS) or
+`C:\Windows\System32\drivers\etc\hosts` (Windows, as administrator):
+
+```
+127.0.0.1 container-registry
+```
+
+The compose stack also uses `host.docker.internal` (the server's `SERVER_URL`). Docker Desktop
+(macOS/Windows) provides this automatically; on Linux add `127.0.0.1 host.docker.internal` too.
+
+**Reset** (clears server state — fixes most "stuck" issues):
+
+```sh
+cd dev-environment
+docker compose down
+docker compose up -d --build
+```
+
+---
+
+## Troubleshooting
+
+| Symptom | Cause / fix |
+|---------|-------------|
+| Release won't start: `Trying to register duplicate definition for type ...` | A type is defined twice (often a leftover from a previous install). **Reset** the dev environment. |
+| Release log stuck at `Waiting for changelog lock...` | Stale DB lock. **Reset** the dev environment. |
+| `Could not find a type definition associated with type [...]` | A type name or an `extends:` reference in `type-definitions.yaml` is inconsistent. Make the names match; reset if needed. |
+| Your task is missing from the **Add task** menu, or its properties don't show | UI cache. Hard-refresh the browser (Ctrl/Cmd+Shift+R). No server restart needed. |
+| Class-not-found at run time | The [naming contract](#the-naming-contract-type--class) is broken: the type name after the dot must equal a class name under `src/`. |
+| Image push fails | `container-registry` is not in your hosts file, or the registry container is down. Check `curl http://container-registry:5050/v2/_catalog`. |
+| Unit test fails with `KeyError` on an output property | `execute()` raised before setting outputs. Read the traceback in the pytest output for the real error. |
+| Apple Silicon: `qemu: uncaught target signal 11` | Enable **Rosetta** in Docker Desktop → *Features in development*. |
+| Compose fails to start | Port conflict on `5516`, `5050`, or `8086` (or `4566` if you add Localstack). Free the port or remap it. |
+
+---
+
+## Production deployment (Kubernetes)
+
+In production, container tasks run on a Kubernetes cluster via the **Release Runner**:
+
+- The Runner lives in the cluster and registers itself with the Release server over an
+  **outbound** connection — the cluster needs no inbound access from Release.
+- When a task runs, the Runner launches a **pod** from your plugin's image and relays
+  input/output between the pod and the Release server.
+- The Release server itself does **not** have to run inside Kubernetes.
+- Your plugin images must be in a registry the cluster can pull from.
+
+Typical tooling for a cluster setup: `kubectl`, `helm`, `yq`, a Java JDK (for `keytool`), and
+optionally `k9s`. The plugin you build here is unchanged — only *where the image runs* differs
+from the local Docker-mode runner. See the Digital.ai Release documentation for the Runner
+installation steps.

@@ -31,6 +31,9 @@ Building the project produces **two artifacts**:
 | `build.sh` / `build.bat` | Builds the plugin zip and the Docker image, and uploads them to Release.    |
 | `project.properties`  | Plugin name, version, and registry coordinates used by the build scripts.     |
 | `dev-environment/`    | A local Dockerized Release server for testing.                                |
+| `PLUGIN_DEVELOPMENT.md` | The detailed guide to building tasks/plugins with this template.            |
+| `AGENTS.md`           | Conventions and guardrails for AI agents (the agent-agnostic source).          |
+| `SKILL.md`            | Portable skill that routes to the docs above (a thin Claude copy lives in `.claude/skills/`). |
 
 > **Note:** This is **not** a pure Python package — it is not published to PyPI.
 > The `src/` tree is copied into a Docker image and executed there by the
