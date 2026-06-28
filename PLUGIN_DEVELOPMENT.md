@@ -28,13 +28,31 @@ A container plugin contributes new **task types** to Release. When a user runs o
 your tasks, Release does roughly this:
 
 ```
- Release UI                Release server                 Container (your image)
-┌──────────┐   run task   ┌───────────────┐  start pod  ┌──────────────────────┐
-│  Task in │ ───────────► │ Reads the type │ ──────────► │ wrapper picks your   │
-│ template │              │ definition,    │             │ Python class by name,│
-│          │ ◄─────────── │ schedules the  │ ◄────────── │ runs execute(),      │
-└──────────┘  outputs +   │ container image│  outputs    │ returns outputs      │
-              comments     └───────────────┘             └──────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│ Release UI                                              │
+│ User runs your task in a release template               │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            │  run task
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│ Release server                                          │
+│ Reads the type definition, starts the container image   │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            │  start container
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│ Container  (your image)                                 │
+│ Wrapper finds your Python class by name, runs execute() │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            │  outputs + comments
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│ Release server  →  UI                                   │
+│ Stores output properties, shows comments on the task    │
+└─────────────────────────────────────────────────────────┘
 ```
 
 1. **Type definition** ([`resources/type-definitions.yaml`](resources/type-definitions.yaml))
