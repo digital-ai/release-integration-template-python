@@ -144,11 +144,17 @@ class Hello(BaseTask):
 ## The naming contract: type ↔ class
 
 This is the one rule you must get right. Release sends the **task type** (e.g.
-`containerExamples.Hello`) to the container, and the wrapper resolves it like this:
+`containerExamples.Hello`) to the container, and the wrapper
+(`digitalai/release/integration/wrapper.py`) always derives the **class name** from the part
+of the type **after the dot** → `Hello`. How it finds the *file* depends on whether the task
+sends a `scriptLocation` property:
 
-1. Split the type on the dot and take the part **after** it → `Hello`.
-2. Search the image for a `.py` file that defines a class named exactly `Hello`.
-3. Import that module and instantiate the class.
+**1. `scriptLocation` set** — explicit, deterministic. The wrapper imports exactly
+`src/<scriptLocation>` and requires a class named after the dot (`Hello`) to live in that file.
+A missing file or a missing class is an error — there is no fallback search.
+
+**2. `scriptLocation` not set** — convention-based fallback. The wrapper walks the whole image,
+AST-parses every `.py`, and uses the **first** file that defines a class named `Hello`.
 
 ```
   type-definitions.yaml          src/hello.py
@@ -158,10 +164,12 @@ This is the one rule you must get right. Release sends the **task type** (e.g.
 
 Consequences:
 
-- **The class name after the dot must match exactly** (case-sensitive).
-- **The file name does not matter** — `Hello` could live in `src/anything.py`. By
-  convention we name the file after the task, but the wrapper resolves by class name.
-- **Keep class names unique** across `src/`, since resolution is by class name.
+- **The class name after the dot must match exactly** (case-sensitive), in both modes.
+- **The file name only matters when `scriptLocation` is set** — then it must point at the exact
+  file under `src/`. Without it, `Hello` could live in `src/anything.py`; by convention we name
+  the file after the task, but the fallback resolves by class name.
+- **Keep class names unique** across `src/` — in fallback mode resolution is by class name and
+  the first match wins.
 
 ---
 
@@ -188,17 +196,31 @@ message becomes the error message — you do **not** need to catch-and-report yo
 
 ## Choosing a base class: `BaseTask` vs `ApiBaseTask`
 
+**`ApiBaseTask` extends `BaseTask`** — it *is* a `BaseTask` with the Release REST API
+pre-wired on top. So everything in [Anatomy of a task](#anatomy-of-a-task)
+(`self.input_properties`, `set_output_property`, `add_comment`, …) is available on both;
+`ApiBaseTask` just adds the API wrappers and helpers below.
+
 | | `BaseTask` | `ApiBaseTask` |
 |--|------------|---------------|
-| Import | `from digitalai.release.integration import BaseTask` | `from digitalai.release.integration.api_base_task import ApiBaseTask` |
-| Use when | The task talks to a third-party system, or needs no Release API. | The task calls the **Release** REST API. |
-| Release API access | Manual: `client = self.get_release_api_client()` | Ready-made: `self.releaseApi`, `self.phaseApi`, `self.taskApi`, `self.templateApi`, … |
+| Import | `from digitalai.release.integration import BaseTask` | `from digitalai.release.integration import ApiBaseTask` |
+| Inheritance | base class | subclass of `BaseTask` |
+| Use when | The task only talks to a third-party system and never needs to call back into Release. | The task talks to a third-party system **and** needs Release API methods (read/update the release, tasks, variables, …) — or calls the Release API at all. |
+| Release API access | Manual: `client = self.get_release_api_client()`, then build each API object yourself. | Ready-made: `self.releaseApi`, `self.phaseApi`, `self.taskApi`, `self.templateApi`, … plus convenience helpers (see below). |
 
-`ApiBaseTask` exposes **every** Release v1 API as a lazily created, cached property. All of
-them share a single client built from the task's **"Run as user"** context, so you just call:
+**When in doubt, pick `ApiBaseTask`.** The API client and each wrapper are created lazily
+and cached, so you pay nothing until you actually touch the API — there is no penalty for
+subclassing it "just in case" you later need a Release call.
+
+### What `ApiBaseTask` gives you
+
+`ApiBaseTask` exposes **every** Release v1 API as a lazily created, cached property
+(`releaseApi`, `phaseApi`, `taskApi`, `folderApi`, `configurationApi`, `templateApi`,
+`variableApi`, … — one per `com.xebialabs.xlrelease.api.v1` wrapper). All of them share a
+single `ReleaseAPIClient` built from the task's **"Run as user"** context, so you just call:
 
 ```python
-from digitalai.release.integration.api_base_task import ApiBaseTask
+from digitalai.release.integration import ApiBaseTask
 
 
 class ShowTitle(ApiBaseTask):
@@ -206,6 +228,12 @@ class ShowTitle(ApiBaseTask):
         release = self.releaseApi.getRelease(self.get_release_id())
         self.add_comment(f"Working on {release.title}")
 ```
+
+On top of the raw wrappers, it adds **current-context** and **variable** helpers that resolve
+the right id from the task's own context (so you don't pass ids around) — e.g.
+`getCurrentRelease()`, `getReleaseVariable(name)` / `setReleaseVariable(name, value)`, and the
+folder/global variable equivalents. For the full list of wrappers and helpers, see the
+**[`ApiBaseTask` reference](https://github.com/digital-ai/release-integration-sdk-python/blob/main/docs/classes/api_base_task.md)**.
 
 > **"Run as user" matters.** API calls execute as the release's Run-as user. If that user
 > is not set or lacks permission, API calls fail. For local testing, the dev-environment
@@ -442,19 +470,13 @@ docker compose up -d --build
 
 ## Production deployment (Kubernetes)
 
-In production, container tasks run on a Kubernetes cluster via the **Release Runner**:
+In production, container tasks run on a Kubernetes cluster via the **Release Runner**, which
+registers itself with the Release server over an **outbound** connection (no inbound access to
+the cluster needed) and launches a **pod** from your plugin's image for each task.
 
-- The Runner lives in the cluster and registers itself with the Release server over an
-  **outbound** connection — the cluster needs no inbound access from Release.
-- When a task runs, the Runner launches a **pod** from your plugin's image and relays
-  input/output between the pod and the Release server.
-- The Release server itself does **not** have to run inside Kubernetes.
-- Your plugin images must be in a registry the cluster can pull from.
-
-Typical tooling for a cluster setup: `kubectl`, `helm`, `yq`, a Java JDK (for `keytool`), and
-optionally `k9s`. The plugin you build here is unchanged — only *where the image runs* differs
-from the local Docker-mode runner. See the Digital.ai Release documentation for the Runner
-installation steps.
+The plugin you build here is unchanged — only *where the image runs* differs from the local
+Docker-mode runner. Just make sure your image is in a registry the cluster can pull from. See
+the Digital.ai Release documentation for the Runner installation steps.
 
 ---
 
