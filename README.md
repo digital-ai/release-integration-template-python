@@ -184,6 +184,19 @@ docker compose down
 
 ---
 
+## Related Resources
+
+- **[Digital.ai Release API Client Documentation](https://github.com/digital-ai/release-api-client-python/blob/main/docs/README.md)** —
+  API Classes and Models reference for the Python client library.
+- **[Digital.ai Python SDK Documentation](https://docs.digital.ai/release/docs/how-to/overview-python-sdk)** —
+  Comprehensive guide to using the Python SDK and building custom tasks.
+- **[SDK Template Project for integration plugins](https://github.com/digital-ai/release-integration-template-python)** —
+  A starting point for building custom integrations using Digital.ai Release and Python.
+- **[Digital.ai Release Python SDK](https://pypi.org/project/digitalai-release-sdk/)** —
+  The official SDK package for integrating with Digital.ai Release, on PyPI.
+
+---
+
 ## License
 
 See [License.md](License.md).
