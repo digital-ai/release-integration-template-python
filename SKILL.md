@@ -7,7 +7,7 @@ metadata:
   workflow: digital-ai-release
 ---
 
-# Develop a Release container integration plugin
+# Develop a Release container plugin
 
 A portable, tool-neutral skill for working in this template. It is concise on purpose: the
 **authoritative content lives in the repo docs**, and this file routes you to the right one so

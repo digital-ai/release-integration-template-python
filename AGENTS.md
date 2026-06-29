@@ -1,7 +1,7 @@
 # AGENTS.md — Working in this repository
 
 Context for AI agents (and humans) contributing to this **Digital.ai Release
-container integration plugin**. Read this first, then see the
+container plugin**. Read this first, then see the
 [Plugin Development Guide](PLUGIN_DEVELOPMENT.md) for the full how-to. There is also a
 portable [`SKILL.md`](SKILL.md) that routes to both.
 
