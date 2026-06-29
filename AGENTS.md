@@ -23,7 +23,8 @@ Release identifies a task by its **type** (e.g. `containerExamples.Hello`). At r
 wrapper:
 
 1. takes the part of the type **after the dot** → `Hello`;
-2. finds the `.py` file under the image that defines a class named **exactly** `Hello`;
+2. locates the `.py` file — from the task's `scriptLocation` if set, otherwise the file under
+   the image that defines a class named **exactly** `Hello`;
 3. imports it and calls `execute()`.
 
 Therefore:

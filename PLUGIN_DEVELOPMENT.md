@@ -38,7 +38,7 @@ your tasks, Release does roughly this:
 flowchart TD
     UI["<b>Release UI</b><br/>User runs your task in a release template"]
     Server["<b>Release server</b><br/>Reads the type definition, starts the container image"]
-    Container["<b>Container</b> (your image)<br/>Wrapper finds your Python class by name, runs execute()"]
+    Container["<b>Container</b> (your image)<br/>Wrapper resolves your class (via scriptLocation, else by class name)<br/>and runs execute()"]
     Back["<b>Release server → UI</b><br/>Stores output properties, shows comments on the task"]
 
     UI -->|run task| Server
@@ -53,8 +53,10 @@ flowchart TD
    pushed to a registry.
 3. **At run time**, Release starts the image as a container. The entrypoint
    (`python -m digitalai.release.integration.wrapper`, see the [`Dockerfile`](Dockerfile))
-   receives the task's input properties, finds the matching Python class, calls its
-   `execute()` method, and sends the output properties and comments back to Release.
+   receives the task's input properties, resolves the matching Python class — from the
+   task's `scriptLocation` if set, otherwise by class name (see
+   [The naming contract](#the-naming-contract-type--class)) — calls its `execute()` method,
+   and sends the output properties and comments back to Release.
 
 You write two things: the **type definition** (YAML) and the **task class** (Python).
 The SDK wrapper handles everything in between.
@@ -99,6 +101,52 @@ type that sets the container image once for every task:
 
 The `@...@` placeholders are filled in from [`project.properties`](project.properties) by
 the build script, so the image tag always matches what you just built.
+
+#### YAML or XML — both are supported
+
+This template uses `type-definitions.yaml`, but Release also accepts the classic
+`synthetic.xml` / `type-definitions.xml` format. The same `Hello` type (and its base task) in
+XML looks like this:
+
+```xml
+<synthetic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.xebialabs.com/deployit/synthetic"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+  <!-- Abstract base task: sets the container image + styling for every task -->
+  <type type="containerExamples.BaseTask" extends="xlrelease.ContainerTask" virtual="true">
+    <property name="image" hidden="true" transient="true"
+              default="@registry.url@/@registry.org@/@project.name@:@project.version@"/>
+    <property name="iconLocation" hidden="true" default="test.png"/>
+    <property name="taskColor" hidden="true" default="#667385"/>
+  </type>
+
+  <type type="containerExamples.Hello" extends="containerExamples.BaseTask" description="Simple greeter task">
+    <property name="yourName" category="input" kind="string" default="World" description="The name to greet"/>
+    <property name="greeting" category="output" kind="string"/>
+  </type>
+</synthetic>
+```
+
+Both formats express the same things; the mapping is mechanical:
+
+| YAML | XML |
+|------|-----|
+| `containerExamples.Hello:` (map key) | `<type type="containerExamples.Hello" …>` |
+| `extends: …` | `extends="…"` attribute |
+| `virtual: true` | `virtual="true"` attribute |
+| `input-properties:` / `output-properties:` blocks | `category="input"` / `category="output"` on each `<property>` |
+| `hidden-properties:` | `<property … hidden="true"/>` |
+| `kind: string`, `default:`, `required:` | `kind="string"`, `default="…"`, `required="true"` attributes |
+| enum options | `<property … kind="enum"><enum-values><value label="…">val</value></enum-values></property>` |
+
+> [!IMPORTANT]
+> Definition files are **merged**, so each type must be declared in **one** file only — don't
+> define the same type in both YAML and XML.
+
+> [!TIP]
+> The task class and the [naming contract](#the-naming-contract-type--class) are **identical**
+> whichever format you pick — XML changes only how the *type* is declared, not the Python.
 
 ### 2. The task class (`src/`)
 
