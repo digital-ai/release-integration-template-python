@@ -16,7 +16,7 @@ nothing is duplicated or drifts.
 - **[AGENTS.md](AGENTS.md)** — conventions and guardrails. **Read first.**
 - **[PLUGIN_DEVELOPMENT.md](PLUGIN_DEVELOPMENT.md)** — the detailed guide (architecture, type
   definitions, task patterns, examples, dev environment, troubleshooting, Kubernetes).
-- **[README.md](README.md)** — setup, build, and install commands.
+- **[README.md](../README.md)** — setup, build, and install commands.
 
 ## What this covers
 
@@ -36,10 +36,10 @@ A task's **type** maps to its Python **class** by the name after the dot
 
 | To… | Go to |
 |-----|-------|
-| Set up / configure a fresh clone | [README → Development](README.md#development); name the plugin in `project.properties`; `uv sync --extra dev`. |
+| Set up / configure a fresh clone | [README → Development](../README.md#development); name the plugin in `project.properties`; `uv sync --extra dev`. |
 | Add a new task | [PLUGIN_DEVELOPMENT.md → Add a new task](PLUGIN_DEVELOPMENT.md#add-a-new-task--step-by-step) (declare type → write class → test → build). |
 | Understand the SDK task API or examples | [PLUGIN_DEVELOPMENT.md → Anatomy of a task](PLUGIN_DEVELOPMENT.md#anatomy-of-a-task) and [The example tasks explained](PLUGIN_DEVELOPMENT.md#the-example-tasks-explained). |
-| Build / deploy / install | [AGENTS.md → Build & deploy](AGENTS.md#build--deploy) and [README → Build & publish](README.md#build--publish). |
+| Build / deploy / install | [AGENTS.md → Build & deploy](AGENTS.md#build--deploy) and [README → Build & publish](../README.md#build--publish). |
 | Run the dev server or fix a stuck server | [PLUGIN_DEVELOPMENT.md → The development environment](PLUGIN_DEVELOPMENT.md#the-development-environment) and [Troubleshooting](PLUGIN_DEVELOPMENT.md#troubleshooting). |
 
 ## Always

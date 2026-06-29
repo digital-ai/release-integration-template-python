@@ -6,6 +6,8 @@ xlw.bat
 *.log
 temp/
 dev-environment/
+docker-compose.yaml
+.env
 .xebialabs/
 .idea/
 build/

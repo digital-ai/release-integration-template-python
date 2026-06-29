@@ -1,7 +1,7 @@
 services:
 
   digitalai-release:
-    build: digitalai-release
+    build: dev-environment/digitalai-release
     ports:
       - "5516:5516"
     environment:
@@ -10,15 +10,15 @@ services:
       - SERVER_URL=http://host.docker.internal:5516
 
   digitalai-release-setup:
-    build: digitalai-release-setup
+    build: dev-environment/digitalai-release-setup
     depends_on:
       - digitalai-release
     command: ["apply", "-v", "-f", "/data/instance-configuration.yaml"]
     volumes:
-      - ./digitalai-release-setup:/data:ro
+      - ./dev-environment/digitalai-release-setup:/data:ro
 
   digitalai-release-remote-runner:
-    build: digitalai-release-remote-runner
+    build: dev-environment/digitalai-release-remote-runner
     depends_on:
       - digitalai-release-setup
     environment:
@@ -33,7 +33,7 @@ services:
     ports:
       - "5050:5000"
     volumes:
-      - .:/var/lib/registry
+      - ./dev-environment:/var/lib/registry
 
   container-registry-ui:
     image: joxit/docker-registry-ui:latest

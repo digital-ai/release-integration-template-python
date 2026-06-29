@@ -46,13 +46,13 @@ flowchart TD
     Container -->|outputs + comments| Back
 ```
 
-1. **Type definition** ([`resources/type-definitions.yaml`](resources/type-definitions.yaml))
+1. **Type definition** ([`resources/type-definitions.yaml`](../resources/type-definitions.yaml))
    tells Release the task exists, what inputs/outputs it has, and which container image to run.
 2. **Build** (`build.sh` / `build.bat`) produces two artifacts: a **plugin zip** (the type
    definitions + icons) installed into Release, and a **Docker image** (your `src/` code)
    pushed to a registry.
 3. **At run time**, Release starts the image as a container. The entrypoint
-   (`python -m digitalai.release.integration.wrapper`, see the [`Dockerfile`](Dockerfile))
+   (`python -m digitalai.release.integration.wrapper`, see the [`Dockerfile`](../Dockerfile))
    receives the task's input properties, resolves the matching Python class — from the
    task's `scriptLocation` if set, otherwise by class name (see
    [The naming contract](#the-naming-contract-type--class)) — calls its `execute()` method,
@@ -99,7 +99,7 @@ type that sets the container image once for every task:
       taskColor: "#667385"
 ```
 
-The `@...@` placeholders are filled in from [`project.properties`](project.properties) by
+The `@...@` placeholders are filled in from [`project.properties`](../project.properties) by
 the build script, so the image tag always matches what you just built.
 
 #### YAML or XML — both are supported
@@ -300,7 +300,7 @@ can pick a saved connection:
 
 Suppose you want a task that reverses a string.
 
-**1. Declare the type** in [`resources/type-definitions.yaml`](resources/type-definitions.yaml):
+**1. Declare the type** in [`resources/type-definitions.yaml`](../resources/type-definitions.yaml):
 
 ```yaml
   containerExamples.Reverse:
@@ -343,13 +343,13 @@ starting points.
 
 | Type (YAML) | Class (`src/`) | Base class | Demonstrates |
 |-------------|----------------|------------|--------------|
-| `containerExamples.Hello` | `Hello` ([hello.py](src/hello.py)) | `BaseTask` | The minimal task: read an input, set an output, add a comment. |
-| `containerExamples.ServerQuery` | `ServerQuery` ([sample_server_task.py](src/sample_server_task.py)) | `BaseTask` | Calling a **third-party** HTTP API using a `ci` server connection for the URL/credentials. |
-| `containerExamples.TestConnection` | `TestConnection` ([test_connection.py](src/test_connection.py)) | `BaseTask` | A **test-connection** script for a server CI: returns `{success, output}` in `commandResponse`. |
-| `containerExamples.SetSystemMessage` | `SetSystemMessage` ([sample_release_api_task.py](src/sample_release_api_task.py)) | `BaseTask` | Calling the **Release** REST API the manual way via `get_release_api_client()`. |
-| `containerExamples.CreateAndStartRelease` | `CreateAndStartRelease` ([create_and_start_release.py](src/create_and_start_release.py)) | `ApiBaseTask` | Orchestrating the Release API with the ready-made `templateApi` / `releaseApi` / `phaseApi` / `taskApi` wrappers. |
-| `containerExamples.NameLookup` | `NameLookup` ([name_lookup.py](src/name_lookup.py)) | `BaseTask` | A **lookup** script that returns `{label, value}` options for a dropdown. |
-| `containerExamples.HelloWithLookup` | `HelloWithLookup` ([hello_with_lookup.py](src/hello_with_lookup.py)) | `BaseTask` | An input whose value is chosen from a lookup (`input-hint.method-ref`). |
+| `containerExamples.Hello` | `Hello` ([hello.py](../src/hello.py)) | `BaseTask` | The minimal task: read an input, set an output, add a comment. |
+| `containerExamples.ServerQuery` | `ServerQuery` ([sample_server_task.py](../src/sample_server_task.py)) | `BaseTask` | Calling a **third-party** HTTP API using a `ci` server connection for the URL/credentials. |
+| `containerExamples.TestConnection` | `TestConnection` ([test_connection.py](../src/test_connection.py)) | `BaseTask` | A **test-connection** script for a server CI: returns `{success, output}` in `commandResponse`. |
+| `containerExamples.SetSystemMessage` | `SetSystemMessage` ([sample_release_api_task.py](../src/sample_release_api_task.py)) | `BaseTask` | Calling the **Release** REST API the manual way via `get_release_api_client()`. |
+| `containerExamples.CreateAndStartRelease` | `CreateAndStartRelease` ([create_and_start_release.py](../src/create_and_start_release.py)) | `ApiBaseTask` | Orchestrating the Release API with the ready-made `templateApi` / `releaseApi` / `phaseApi` / `taskApi` wrappers. |
+| `containerExamples.NameLookup` | `NameLookup` ([name_lookup.py](../src/name_lookup.py)) | `BaseTask` | A **lookup** script that returns `{label, value}` options for a dropdown. |
+| `containerExamples.HelloWithLookup` | `HelloWithLookup` ([hello_with_lookup.py](../src/hello_with_lookup.py)) | `BaseTask` | An input whose value is chosen from a lookup (`input-hint.method-ref`). |
 
 ### How the key examples were built
 
@@ -396,7 +396,7 @@ def test_reverse():
     assert task.get_output_properties()['reversed'] == 'cba'
 ```
 
-Tests live in [`tests/unit/`](tests/unit/) (fast, mocked) and [`tests/integration/`](tests/integration/)
+Tests live in [`tests/unit/`](../tests/unit/) (fast, mocked) and [`tests/integration/`](../tests/integration/)
 (networked tests; Release-backed tests auto-skip when no server is reachable, while
 third-party service tests require internet access). Run them with:
 
@@ -405,25 +405,25 @@ uv run pytest               # everything
 uv run pytest tests/unit    # fast unit tests only
 ```
 
-See the [README — Run the tests](README.md#run-the-tests) for the full workflow, including
+See the [README — Run the tests](../README.md#run-the-tests) for the full workflow, including
 the `RELEASE_*` environment variables for integration tests.
 
 ## Build, install, run
 
 The full build/install/run instructions live in the README:
 
-- [Run Release locally](README.md#run-release-locally)
-- [Build & publish](README.md#build--publish)
-- [Install the plugin into Release](README.md#install-the-plugin-into-release)
+- [Run Release locally](../README.md#run-release-locally)
+- [Build & publish](../README.md#build--publish)
+- [Install the plugin into Release](../README.md#install-the-plugin-into-release)
 
-The short version: bump `VERSION` in [`project.properties`](project.properties), run
+The short version: bump `VERSION` in [`project.properties`](../project.properties), run
 `./build.sh` (or `build.bat`) to build the zip + image and push the image, then
 `./build.sh --upload` to install the zip into Release. Add your task to a template and run it.
 
 ## The development environment
 
-[`dev-environment/`](dev-environment/) is a Docker Compose stack that runs a complete local
-Release setup to test plugins against:
+The [`docker-compose.yaml`](../docker-compose.yaml) stack (with its build contexts and config in
+[`dev-environment/`](../dev-environment/)) runs a complete local Release setup to test plugins against:
 
 | Service | Port | Purpose |
 |---------|------|---------|
@@ -437,7 +437,6 @@ Start it and wait for the Release log line `Digital.ai Release has started.`, th
 <http://localhost:5516>:
 
 ```sh
-cd dev-environment
 docker compose up -d --build
 ```
 
@@ -455,7 +454,6 @@ The compose stack also uses `host.docker.internal` (the server's `SERVER_URL`). 
 **Reset** (clears server state — fixes most "stuck" issues):
 
 ```sh
-cd dev-environment
 docker compose down
 docker compose up -d --build
 ```
@@ -486,4 +484,4 @@ the Digital.ai Release documentation for the Runner installation steps.
 
 ## Related resources
 
-See [README → Related resources](README.md#related-resources).
+See [README → Related resources](../README.md#related-resources).

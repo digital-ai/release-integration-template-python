@@ -18,7 +18,7 @@ Building the project produces **two artifacts**:
 - a **Docker image** — the `src/` task code and its dependencies, pushed to a container registry and run by Release.
 
 > [!TIP]
-> **Writing your own tasks?** Start with the **[Plugin Development Guide](PLUGIN_DEVELOPMENT.md)** —
+> **Writing your own tasks?** Start with the **[Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md)** —
 > it explains how a container plugin works, how to add a task, and how each bundled example was built.
 
 ## Contents
@@ -37,8 +37,8 @@ Building the project produces **two artifacts**:
 ## Quick start
 
 ```sh
-uv sync --extra dev                                   # set up the local env (.venv)
-cd dev-environment && docker compose up -d --build    # local Release server at http://localhost:5516
+uv sync --extra dev                  # set up the local env (.venv)
+docker compose up -d --build         # local Release server at http://localhost:5516
 ```
 
 Then create a template with the **Hello** task and run it. Each step is detailed below.
@@ -47,7 +47,7 @@ Then create a template with the **Hello** task and run it. Each step is detailed
 
 | Path                  | Purpose                                                                       |
 |-----------------------|-------------------------------------------------------------------------------|
-| `src/`                | Task implementations. **This code ships inside the Docker image.** See the [Plugin Development Guide](PLUGIN_DEVELOPMENT.md). |
+| `src/`                | Task implementations. **This code ships inside the Docker image.** See the [Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md). |
 | `tests/`              | Tests for the task classes — `unit/` (fast) and `integration/` (network). Not shipped in the image. |
 | `resources/`          | Plugin metadata (`type-definitions.yaml`, icons) packaged into the plugin zip. |
 | `requirements.txt`    | Runtime dependencies installed into the Docker image. **Source of truth for the container.** |
@@ -55,10 +55,9 @@ Then create a template with the **Hello** task and run it. Each step is detailed
 | `Dockerfile`          | Builds the container image that runs the tasks.                               |
 | `build.sh` / `build.bat` | Builds the plugin zip and the Docker image, and uploads them to Release.    |
 | `project.properties`  | Plugin name, version, and registry coordinates used by the build scripts.     |
-| `dev-environment/`    | A local Dockerized Release server for testing.                                |
-| `PLUGIN_DEVELOPMENT.md` | The detailed guide to building tasks/plugins with this template.            |
-| `AGENTS.md`           | Conventions and guardrails for AI agents (the agent-agnostic source).          |
-| `SKILL.md`            | Portable `develop-release-integration` skill that routes to the docs above (a thin Claude copy lives in `.claude/skills/develop-release-integration/`). |
+| `docker-compose.yaml` | A local Dockerized Release server (+ container registry) for testing.          |
+| `dev-environment/`    | Build contexts and config used by `docker-compose.yaml`.                       |
+| `docs/`               | Contributor docs: `PLUGIN_DEVELOPMENT.md` (detailed guide), `AGENTS.md` (conventions/guardrails for AI agents), and `SKILL.md` (portable `develop-release-integration` skill that routes to the docs above). |
 
 > [!NOTE]
 > This is **not** a pure Python package — it is not published to PyPI.
@@ -147,7 +146,6 @@ uv add --optional dev <package>
 Run a local Release server, with its own container registry, using Docker.
 
 ```sh
-cd dev-environment
 docker compose up -d --build
 ```
 
@@ -201,7 +199,6 @@ Create a template with the **Hello** task (`containerExamples.Hello`) and run it
 When you are done, stop the local environment:
 
 ```sh
-cd dev-environment
 docker compose down
 ```
 
