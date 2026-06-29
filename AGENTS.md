@@ -55,6 +55,7 @@ Use **`ApiBaseTask`** (not `BaseTask`) when the task calls the **Release** REST 
 exposes ready-made `self.releaseApi`, `self.phaseApi`, `self.taskApi`, `self.templateApi`,
 etc., all built from the task's **"Run as user"** context.
 
+> [!NOTE]
 > The `from com.xebialabs.xlrelease...` imports are real Python classes provided by the
 > `digitalai-release-api-client` package (bundled with the SDK). They import fine under
 > CPython — they are not Jython-only.
@@ -106,6 +107,7 @@ uv run pytest -m "not integration"        # same, by marker
 Live tests read `RELEASE_SERVER_URL` / `RELEASE_USERNAME` / `RELEASE_PASSWORD`
 (defaults: `http://localhost:5516`, `admin`, `admin`).
 
+> [!TIP]
 > **uv on Windows:** if uv warns that `VIRTUAL_ENV` does not match the project environment,
 > target the project's env explicitly: `uv run --python .venv/Scripts/python.exe pytest`.
 

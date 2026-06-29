@@ -4,6 +4,7 @@ A practical guide to building Digital.ai Release **container plugins** with this
 It explains how the pieces fit together, how to add your own task, and how each
 bundled example was built.
 
+> [!TIP]
 > New here? Read [How a container plugin works](#how-a-container-plugin-works) first,
 > then jump to [Add a new task — step by step](#add-a-new-task--step-by-step).
 >
@@ -28,39 +29,21 @@ bundled example was built.
 - [Production deployment (Kubernetes)](#production-deployment-kubernetes)
 - [Related resources](#related-resources)
 
----
-
 ## How a container plugin works
 
 A container plugin contributes new **task types** to Release. When a user runs one of
 your tasks, Release does roughly this:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│ Release UI                                              │
-│ User runs your task in a release template               │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            │  run task
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│ Release server                                          │
-│ Reads the type definition, starts the container image   │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            │  start container
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│ Container  (your image)                                 │
-│ Wrapper finds your Python class by name, runs execute() │
-└─────────────────────────────────────────────────────────┘
-                            │
-                            │  outputs + comments
-                            ▼
-┌─────────────────────────────────────────────────────────┐
-│ Release server  →  UI                                   │
-│ Stores output properties, shows comments on the task    │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    UI["<b>Release UI</b><br/>User runs your task in a release template"]
+    Server["<b>Release server</b><br/>Reads the type definition, starts the container image"]
+    Container["<b>Container</b> (your image)<br/>Wrapper finds your Python class by name, runs execute()"]
+    Back["<b>Release server → UI</b><br/>Stores output properties, shows comments on the task"]
+
+    UI -->|run task| Server
+    Server -->|start container| Container
+    Container -->|outputs + comments| Back
 ```
 
 1. **Type definition** ([`resources/type-definitions.yaml`](resources/type-definitions.yaml))
@@ -75,8 +58,6 @@ your tasks, Release does roughly this:
 
 You write two things: the **type definition** (YAML) and the **task class** (Python).
 The SDK wrapper handles everything in between.
-
----
 
 ## The two building blocks
 
@@ -126,7 +107,6 @@ A Python class that does the work:
 ```python
 from digitalai.release.integration import BaseTask
 
-
 class Hello(BaseTask):
 
     def execute(self) -> None:
@@ -138,8 +118,6 @@ class Hello(BaseTask):
         self.add_comment(greeting)                 # shows in the task's UI comments
         self.set_output_property('greeting', greeting)
 ```
-
----
 
 ## The naming contract: type ↔ class
 
@@ -171,8 +149,6 @@ Consequences:
 - **Keep class names unique** across `src/` — in fallback mode resolution is by class name and
   the first match wins.
 
----
-
 ## Anatomy of a task
 
 Every task subclasses `BaseTask` and implements **`execute(self) -> None`**. Inside it you
@@ -191,8 +167,6 @@ have these helpers (from `digitalai.release.integration.BaseTask`):
 **Lifecycle:** Release calls `execute_task()`, which sets up the output context and calls
 your `execute()`. If `execute()` raises, the task is marked failed and the exception
 message becomes the error message — you do **not** need to catch-and-report yourself.
-
----
 
 ## Choosing a base class: `BaseTask` vs `ApiBaseTask`
 
@@ -222,7 +196,6 @@ single `ReleaseAPIClient` built from the task's **"Run as user"** context, so yo
 ```python
 from digitalai.release.integration import ApiBaseTask
 
-
 class ShowTitle(ApiBaseTask):
     def execute(self) -> None:
         release = self.releaseApi.getRelease(self.get_release_id())
@@ -235,11 +208,10 @@ the right id from the task's own context (so you don't pass ids around) — e.g.
 folder/global variable equivalents. For the full list of wrappers and helpers, see the
 **[`ApiBaseTask` reference](https://github.com/digital-ai/release-integration-sdk-python/blob/main/docs/classes/api_base_task.md)**.
 
+> [!IMPORTANT]
 > **"Run as user" matters.** API calls execute as the release's Run-as user. If that user
 > is not set or lacks permission, API calls fail. For local testing, the dev-environment
 > server (`localhost:5516`, `admin`/`admin`) has a working runner.
-
----
 
 ## Property kinds reference
 
@@ -276,8 +248,6 @@ can pick a saved connection:
         required: true
 ```
 
----
-
 ## Add a new task — step by step
 
 Suppose you want a task that reverses a string.
@@ -303,7 +273,6 @@ type after the dot):
 ```python
 from digitalai.release.integration import BaseTask
 
-
 class Reverse(BaseTask):
     def execute(self) -> None:
         text = self.input_properties['text']
@@ -318,8 +287,6 @@ class Reverse(BaseTask):
 (see [Build, install, run](#build-install-run)). Add the task to a template and run it.
 
 That's the whole loop: **declare → implement → test → build → run.**
-
----
 
 ## The example tasks explained
 
@@ -365,8 +332,6 @@ Prefer this over the manual client whenever you work with the Release API.
 `{label, value}` entries as `commandResponse`. `HelloWithLookup` wires its `yourName` input
 to that script via `input-hint.method-ref`, so the field becomes a populated dropdown.
 
----
-
 ## Testing your task
 
 Tasks are plain Python classes, so you can unit-test them without a server by setting
@@ -375,7 +340,6 @@ client / `requests` to keep unit tests offline.
 
 ```python
 from src.reverse import Reverse
-
 
 def test_reverse():
     task = Reverse()
@@ -396,8 +360,6 @@ uv run pytest tests/unit    # fast unit tests only
 See the [README — Run the tests](README.md#run-the-tests) for the full workflow, including
 the `RELEASE_*` environment variables for integration tests.
 
----
-
 ## Build, install, run
 
 The full build/install/run instructions live in the README:
@@ -409,8 +371,6 @@ The full build/install/run instructions live in the README:
 The short version: bump `VERSION` in [`project.properties`](project.properties), run
 `./build.sh` (or `build.bat`) to build the zip + image and push the image, then
 `./build.sh --upload` to install the zip into Release. Add your task to a template and run it.
-
----
 
 ## The development environment
 
@@ -452,8 +412,6 @@ docker compose down
 docker compose up -d --build
 ```
 
----
-
 ## Troubleshooting
 
 | Symptom | Cause / fix |
@@ -468,8 +426,6 @@ docker compose up -d --build
 | Apple Silicon: `qemu: uncaught target signal 11` | Enable **Rosetta** in Docker Desktop → *Features in development*. |
 | Compose fails to start | Port conflict on `5516`, `5050`, or `8086` (or `4566` if you add Localstack). Free the port or remap it. |
 
----
-
 ## Production deployment (Kubernetes)
 
 In production, container tasks run on a Kubernetes cluster via the **Release Runner**, which
@@ -480,15 +436,6 @@ The plugin you build here is unchanged — only *where the image runs* differs f
 Docker-mode runner. Just make sure your image is in a registry the cluster can pull from. See
 the Digital.ai Release documentation for the Runner installation steps.
 
----
-
 ## Related resources
 
-- **[Digital.ai Release API Client Documentation](https://github.com/digital-ai/release-api-client-python/blob/main/docs/README.md)** —
-  API Classes and Models reference for the Python client library.
-- **[Digital.ai Python SDK Documentation](https://docs.digital.ai/release/docs/how-to/overview-python-sdk)** —
-  Comprehensive guide to using the Python SDK and building custom tasks.
-- **[SDK Template Project for integration plugins](https://github.com/digital-ai/release-integration-template-python)** —
-  A starting point for building custom integrations using Digital.ai Release and Python.
-- **[Digital.ai Release Python SDK](https://pypi.org/project/digitalai-release-sdk/)** —
-  The official SDK package for integrating with Digital.ai Release, on PyPI.
+See [README → Related resources](README.md#related-resources).

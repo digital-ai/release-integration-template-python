@@ -1,5 +1,9 @@
 # Template Project for Digital.ai Release Integrations
 
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+[![digitalai-release-sdk](https://img.shields.io/badge/digitalai--release--sdk-PyPI-orange)](https://pypi.org/project/digitalai-release-sdk/)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
 This project serves as a template for developing a Python-based **container plugin**
 for Digital.ai Release. Each task is a Python class in [`src/`](src/) that is packaged
 into a Docker image and run by Release as a container task.
@@ -13,10 +17,31 @@ Building the project produces **two artifacts**:
 - a **plugin zip** — the plugin metadata from `resources/`, installed into Release.
 - a **Docker image** — the `src/` task code and its dependencies, pushed to a container registry and run by Release.
 
+> [!TIP]
 > **Writing your own tasks?** Start with the **[Plugin Development Guide](PLUGIN_DEVELOPMENT.md)** —
 > it explains how a container plugin works, how to add a task, and how each bundled example was built.
 
----
+## Contents
+
+- [Quick start](#quick-start)
+- [Project layout](#project-layout)
+- [Prerequisites](#prerequisites)
+- [Development](#development)
+- [Run Release locally](#run-release-locally)
+- [Build & publish](#build--publish)
+- [Install the plugin into Release](#install-the-plugin-into-release)
+- [Try it out](#try-it-out)
+- [Related resources](#related-resources)
+- [License](#license)
+
+## Quick start
+
+```sh
+uv sync --extra dev                                   # set up the local env (.venv)
+cd dev-environment && docker compose up -d --build    # local Release server at http://localhost:5516
+```
+
+Then create a template with the **Hello** task and run it. Each step is detailed below.
 
 ## Project layout
 
@@ -35,11 +60,10 @@ Building the project produces **two artifacts**:
 | `AGENTS.md`           | Conventions and guardrails for AI agents (the agent-agnostic source).          |
 | `SKILL.md`            | Portable skill that routes to the docs above (a thin Claude copy lives in `.claude/skills/`). |
 
-> **Note:** This is **not** a pure Python package — it is not published to PyPI.
+> [!NOTE]
+> This is **not** a pure Python package — it is not published to PyPI.
 > The `src/` tree is copied into a Docker image and executed there by the
 > Release task wrapper.
-
----
 
 ## Prerequisites
 
@@ -57,8 +81,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Windows (PowerShell)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
-
----
 
 ## Development
 
@@ -93,7 +115,13 @@ services directly, so they require internet access. Point Release-backed tests a
 a server (defaults shown) with:
 
 ```sh
+# macOS / Linux
 RELEASE_SERVER_URL=http://localhost:5516 RELEASE_USERNAME=admin RELEASE_PASSWORD=admin uv run pytest tests/integration
+```
+
+```powershell
+# Windows (PowerShell)
+$env:RELEASE_SERVER_URL="http://localhost:5516"; $env:RELEASE_USERNAME="admin"; $env:RELEASE_PASSWORD="admin"; uv run pytest tests/integration
 ```
 
 ### Add a dependency
@@ -113,8 +141,6 @@ A dev-only dependency (e.g. a test helper) goes in the `dev` extra only:
 ```sh
 uv add --optional dev <package>
 ```
-
----
 
 ## Run Release locally
 
@@ -136,8 +162,6 @@ Release must be able to reach the local container registry by name. Add this ent
 127.0.0.1 container-registry
 ```
 
----
-
 ## Build & publish
 
 The build scripts read `project.properties`, build the plugin zip from
@@ -152,8 +176,6 @@ the configured registry.
 | `./build.sh --upload`  | Build the zip and image, push the image, and upload the zip to Release. |
 
 On Windows, use `build.bat` with the same arguments.
-
----
 
 ## Install the plugin into Release
 
@@ -172,11 +194,9 @@ In the Release **Plugin Manager**, upload the zip from `build/`
 with the current [`project.properties`](project.properties)),
 then reload the browser.
 
----
-
 ## Try it out
 
-Create a template with the **Container Examples: Hello** task and run it.
+Create a template with the **Hello** task (`containerExamples.Hello`) and run it.
 
 When you are done, stop the local environment:
 
@@ -185,9 +205,7 @@ cd dev-environment
 docker compose down
 ```
 
----
-
-## Related Resources
+## Related resources
 
 - **[Digital.ai Release API Client Documentation](https://github.com/digital-ai/release-api-client-python/blob/main/docs/README.md)** —
   API Classes and Models reference for the Python client library.
@@ -197,8 +215,6 @@ docker compose down
   A starting point for building custom integrations using Digital.ai Release and Python.
 - **[Digital.ai Release Python SDK](https://pypi.org/project/digitalai-release-sdk/)** —
   The official SDK package for integrating with Digital.ai Release, on PyPI.
-
----
 
 ## License
 

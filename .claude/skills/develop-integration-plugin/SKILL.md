@@ -12,5 +12,6 @@ the generic root skill so it is not duplicated:
 [AGENTS.md](../../../AGENTS.md) (conventions) and
 [PLUGIN_DEVELOPMENT.md](../../../PLUGIN_DEVELOPMENT.md) (the detailed guide).
 
-**Before acting**, read [AGENTS.md](../../../AGENTS.md) — especially the **type ↔ class naming
-contract** (the type name after the dot must equal a unique class name under `src/`).
+> [!IMPORTANT]
+> **Before acting**, read [AGENTS.md](../../../AGENTS.md) — especially the **type ↔ class naming
+> contract** (the type name after the dot must equal a unique class name under `src/`).
