@@ -1,5 +1,5 @@
 ---
-name: develop-integration-plugin
+name: develop-release-integration
 description: Develop this Digital.ai Release container integration plugin end to end — set up the project, add new task types, write tests, and build/deploy. Use when working in this template repo to set up a fresh clone and configure project.properties, to create or scaffold a new Release task/action (type definition in resources/type-definitions.yaml plus a Python class in src/ plus tests), or to build, package, publish, release, deploy, or install the plugin (build.sh / build.bat, plugin zip plus Docker image).
 ---
 

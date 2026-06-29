@@ -58,7 +58,7 @@ Then create a template with the **Hello** task and run it. Each step is detailed
 | `dev-environment/`    | A local Dockerized Release server for testing.                                |
 | `PLUGIN_DEVELOPMENT.md` | The detailed guide to building tasks/plugins with this template.            |
 | `AGENTS.md`           | Conventions and guardrails for AI agents (the agent-agnostic source).          |
-| `SKILL.md`            | Portable skill that routes to the docs above (a thin Claude copy lives in `.claude/skills/`). |
+| `SKILL.md`            | Portable `develop-release-integration` skill that routes to the docs above (a thin Claude copy lives in `.claude/skills/develop-release-integration/`). |
 
 > [!NOTE]
 > This is **not** a pure Python package — it is not published to PyPI.

@@ -1,5 +1,5 @@
 ---
-name: develop-integration-plugin
+name: develop-release-integration
 description: Build, test, and maintain this container-based integration plugin for Digital.ai Release (Python SDK). Use for project setup, defining task types and server connections in resources/type-definitions.yaml, implementing tasks in src/, writing pytest tests, and the build/deploy workflow. Routes to the detailed guide; does not duplicate it.
 license: MIT
 metadata:
