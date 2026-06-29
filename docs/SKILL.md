@@ -36,7 +36,7 @@ A task's **type** maps to its Python **class** by the name after the dot
 
 | To… | Go to |
 |-----|-------|
-| Set up / configure a fresh clone | [README → Development](../README.md#development); name the plugin in `project.properties`; `uv sync --extra dev`. |
+| Set up / configure a fresh clone | [README → Development](../README.md#development); name the plugin in `project.properties`; replace the template README with the starter (`mv README-plugin.md README.md`); `uv sync --extra dev`. |
 | Add a new task | [PLUGIN_DEVELOPMENT.md → Add a new task](PLUGIN_DEVELOPMENT.md#add-a-new-task--step-by-step) (declare type → write class → test → build). |
 | Understand the SDK task API or examples | [PLUGIN_DEVELOPMENT.md → Anatomy of a task](PLUGIN_DEVELOPMENT.md#anatomy-of-a-task) and [The example tasks explained](PLUGIN_DEVELOPMENT.md#the-example-tasks-explained). |
 | Build / deploy / install | [AGENTS.md → Build & deploy](AGENTS.md#build--deploy) and [README → Build & publish](../README.md#build--publish). |
