@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from src.sample_release_api_task import SetSystemMessage
+from src.set_system_message import SetSystemMessage
 
 
 @pytest.fixture

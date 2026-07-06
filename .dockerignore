@@ -1,19 +1,18 @@
-build.bat
-build.sh
-xlw
-xlw.bat
-.git
-*.log
-temp/
-dev-environment/
-docker-compose.yaml
-.env
-.xebialabs/
-.idea/
-build/
-tests/
-.venv/
-.pytest_cache/
+# The container image only needs the task code (src/) and its runtime
+# dependency list (requirements.txt). Everything else — docs, tests, build
+# tooling, the dev-environment stack, IDE/VCS files — is excluded so the
+# image stays small and never ships anything it doesn't execute.
+#
+# This is an allowlist: ignore everything, then re-include only what the
+# image needs, so docs/config added later can't silently bloat the image.
+
+# Ignore everything by default...
+*
+
+# ...then re-include only what the container needs at build/run time.
+!src/
+!requirements.txt
+
+# ...but never ship Python bytecode or caches, even from under src/.
 **/__pycache__/
-uv.lock
-pyproject.toml
+**/*.py[cod]

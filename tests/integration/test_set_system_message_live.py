@@ -10,7 +10,7 @@ import uuid
 
 import pytest
 
-from src.sample_release_api_task import SetSystemMessage
+from src.set_system_message import SetSystemMessage
 
 pytestmark = pytest.mark.integration
 

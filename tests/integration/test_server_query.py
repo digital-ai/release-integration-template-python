@@ -1,6 +1,6 @@
 import pytest
 
-from src.sample_server_task import ServerQuery
+from src.server_query import ServerQuery
 
 
 @pytest.mark.integration

@@ -344,9 +344,9 @@ starting points.
 | Type (YAML) | Class (`src/`) | Base class | Demonstrates |
 |-------------|----------------|------------|--------------|
 | `containerExamples.Hello` | `Hello` ([hello.py](../src/hello.py)) | `BaseTask` | The minimal task: read an input, set an output, add a comment. |
-| `containerExamples.ServerQuery` | `ServerQuery` ([sample_server_task.py](../src/sample_server_task.py)) | `BaseTask` | Calling a **third-party** HTTP API using a `ci` server connection for the URL/credentials. |
+| `containerExamples.ServerQuery` | `ServerQuery` ([server_query.py](../src/server_query.py)) | `BaseTask` | Calling a **third-party** HTTP API using a `ci` server connection for the URL/credentials. |
 | `containerExamples.TestConnection` | `TestConnection` ([test_connection.py](../src/test_connection.py)) | `BaseTask` | A **test-connection** script for a server CI: returns `{success, output}` in `commandResponse`. |
-| `containerExamples.SetSystemMessage` | `SetSystemMessage` ([sample_release_api_task.py](../src/sample_release_api_task.py)) | `BaseTask` | Calling the **Release** REST API the manual way via `get_release_api_client()`. |
+| `containerExamples.SetSystemMessage` | `SetSystemMessage` ([set_system_message.py](../src/set_system_message.py)) | `BaseTask` | Calling the **Release** REST API the manual way via `get_release_api_client()`. |
 | `containerExamples.CreateAndStartRelease` | `CreateAndStartRelease` ([create_and_start_release.py](../src/create_and_start_release.py)) | `ApiBaseTask` | Orchestrating the Release API with the ready-made `templateApi` / `releaseApi` / `phaseApi` / `taskApi` wrappers. |
 | `containerExamples.NameLookup` | `NameLookup` ([name_lookup.py](../src/name_lookup.py)) | `BaseTask` | A **lookup** script that returns `{label, value}` options for a dropdown. |
 | `containerExamples.HelloWithLookup` | `HelloWithLookup` ([hello_with_lookup.py](../src/hello_with_lookup.py)) | `BaseTask` | An input whose value is chosen from a lookup (`input-hint.method-ref`). |
