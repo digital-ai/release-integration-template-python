@@ -105,7 +105,7 @@ the build script, so the image tag always matches what you just built.
 #### YAML or XML — both are supported
 
 This template uses `type-definitions.yaml`, but Release also accepts the classic
-`synthetic.xml` / `type-definitions.xml` format. The same `Hello` type (and its base task) in
+`type-definitions.xml` format. The same `Hello` type (and its base task) in
 XML looks like this:
 
 ```xml
