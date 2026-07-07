@@ -1,4 +1,11 @@
-digitalai-release-sdk==26.3.0b7
-# Note: no additional entries are required below.
-# - 'digitalai-release-api-client' is bundled with digitalai-release-sdk, so do not list it separately.
-# - 'requests' is also pulled in transitively via digitalai-release-sdk, so no explicit entry is needed.
+# Python dependencies for this Digital.ai Release integration.
+#
+# The Release SDK is the only package you need to pin here. Everything the
+# integration relies on at runtime is installed transitively with it:
+#
+#   - digitalai-release-api-client  (bundled with the SDK — never pin it separately)
+#   - requests                      (a dependency of the SDK — no explicit entry needed)
+#
+# Add any packages your own scripts import below the SDK pin.
+
+digitalai-release-sdk==26.3.0

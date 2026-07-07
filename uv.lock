@@ -149,20 +149,20 @@ wheels = [
 
 [[package]]
 name = "digitalai-release-api-client"
-version = "26.3.0b7"
+version = "26.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/82/10/4c298758eec18c89ca942c986a90f97df10b9232449f146d3fc52eac9816/digitalai_release_api_client-26.3.0b7.tar.gz", hash = "sha256:20ba9e0987e302a15cc72d83679ab81070f358bf5f5c32c60efc67df94565caa", size = 42593 }
+sdist = { url = "https://files.pythonhosted.org/packages/08/62/9701333e060406f36244516a97d67604042dd222d2ade5a49ded37aeb23a/digitalai_release_api_client-26.3.0.tar.gz", hash = "sha256:4da34e4fc1ab2476aca6eaac5cbf57daf3020963647105f4aad2e5e032885735", size = 42586 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/74/30/ac4326ae564e9cbbf79709e30238c9302020701137fdd966adbd8da212c2/digitalai_release_api_client-26.3.0b7-py3-none-any.whl", hash = "sha256:0f10b71db922f02cc1f6f2f641b3356c8584e921f6db8c1d25e8bdff7c486c53", size = 73861 },
+    { url = "https://files.pythonhosted.org/packages/33/b0/278902503d8cb56955e5339b0c80183624fc228fbbbde7216da71ee4fc23/digitalai_release_api_client-26.3.0-py3-none-any.whl", hash = "sha256:492f9b90b8c37bb328ef048433ae1c7e487ccf9b0ee9912e7e110c22a45f5f1e", size = 73844 },
 ]
 
 [[package]]
 name = "digitalai-release-sdk"
-version = "26.3.0b7"
+version = "26.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dataclasses-json" },
@@ -172,9 +172,9 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/69/b0/8b4c41f2af959cc4db37bf56361d4f4fe43aef1373e61e96aa280127f7e1/digitalai_release_sdk-26.3.0b7.tar.gz", hash = "sha256:d8a13d8f6bbad39f0e4593898d619e6ddac6bac03ab79e236cd1ded6ba27928a", size = 20222 }
+sdist = { url = "https://files.pythonhosted.org/packages/b7/b7/e0703b7dc917a8e7462a9a02150640abf65b6748a3b4d59e3478a0a58a7f/digitalai_release_sdk-26.3.0.tar.gz", hash = "sha256:73c6cff798fbdd950cfe8f46117a0980e0c885665b9fab8518391375f47dc7cc", size = 20219 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b9/2a/57f300fb84e867bcb41a94a88ddf437d66582d0b1063163fcf3ec6ea3f51/digitalai_release_sdk-26.3.0b7-py3-none-any.whl", hash = "sha256:87ef5365e55ca82ec55c58fe7917691bd8343a9c0700aafe8a645787486eba48", size = 25812 },
+    { url = "https://files.pythonhosted.org/packages/b0/a7/c743a91be9fb01d41ae1ee7d98b453b85e420117045fab433d5efaf4af50/digitalai_release_sdk-26.3.0-py3-none-any.whl", hash = "sha256:6df785b7ea1a785c0e4195ac573ae474e2ba53a9f197d3e192dfeabb9bf543ef", size = 25794 },
 ]
 
 [[package]]
@@ -560,7 +560,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "digitalai-release-sdk", specifier = "==26.3.0b7" },
+    { name = "digitalai-release-sdk", specifier = "==26.3.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0.0" },
 ]
 provides-extras = ["dev"]

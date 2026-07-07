@@ -5,7 +5,7 @@ description = "Template project for building Digital.ai Release container-based 
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "digitalai-release-sdk==26.3.0b7",
+    "digitalai-release-sdk==26.3.0",
 ]
 
 [project.optional-dependencies]
