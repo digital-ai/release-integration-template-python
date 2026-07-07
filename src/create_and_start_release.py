@@ -7,14 +7,14 @@ from com.xebialabs.xlrelease.domain.task import Task
 
 
 class CreateAndStartRelease(ApiBaseTask):
-    """Create a release, add a phase and a legacy Jython task, start it, and print the result."""
+    """Create a release, add a phase and a Jython task, start it, and print the result."""
 
     def execute(self) -> None:
 
         # Read input properties, falling back to defaults.
         release_title = self.input_properties.get("releaseTitle") or "Demo Release 1.0.0"
         phase_title = self.input_properties.get("phaseTitle") or "Run Release Automation"
-        task_title = self.input_properties.get("taskTitle") or "Run legacy Jython script"
+        task_title = self.input_properties.get("taskTitle") or "Run Jython script"
 
         # The API wrappers (self.templateApi, self.releaseApi, self.phaseApi,
         # self.taskApi) are provided by ApiBaseTask. They are created lazily and
@@ -48,7 +48,7 @@ class CreateAndStartRelease(ApiBaseTask):
         phase = self.phaseApi.updatePhase(phase.id, phase)
         print(f"[2] Phase renamed    -> id={phase.id}, title='{phase.title}'")
 
-        # 3. Add a legacy Jython script task ("xlrelease.ScriptTask" runs Jython via the "script" property).
+        # 3. Add a Jython script task ("xlrelease.ScriptTask" runs Jython via the "script" property).
         jython_script = (
             "print 'Hello from the Jython script task!'\n"
             "print 'This task was created via the release_api_client.'\n"
@@ -59,7 +59,7 @@ class CreateAndStartRelease(ApiBaseTask):
             Task(title=task_title, type="xlrelease.ScriptTask", script=jython_script),
         )
         print(
-            f"[3] Legacy Jython task added -> id={task.id}, "
+            f"[3] Jython task added -> id={task.id}, "
             f"title='{task.title}', type={task.type}"
         )
 

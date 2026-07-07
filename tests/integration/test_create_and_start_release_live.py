@@ -26,7 +26,7 @@ def test_create_and_start_release_live(live_client):
         "task_id": "task_1",
         "releaseTitle": release_title,
         "phaseTitle": "Run Release Automation",
-        "taskTitle": "Run legacy Jython script",
+        "taskTitle": "Run Jython script",
     }
 
     release_api = ReleaseApi(live_client)
@@ -51,7 +51,7 @@ def test_create_and_start_release_live(live_client):
         phase = release.phases[0]
         assert phase.title == "Run Release Automation"
         jython_task = phase.tasks[0]
-        assert jython_task.title == "Run legacy Jython script"
+        assert jython_task.title == "Run Jython script"
         assert jython_task.type == "xlrelease.ScriptTask"
     finally:
         # Clean up so repeated runs do not pile up releases on the server.

@@ -79,9 +79,9 @@ types:
         kind: string
         default: Run Release Automation
       taskTitle:
-        description: Title of the legacy Jython script task to add to the phase
+        description: Title of the Jython script task to add to the phase
         kind: string
-        default: Run legacy Jython script
+        default: Run Jython script
 
     output-properties:
       releaseId:
