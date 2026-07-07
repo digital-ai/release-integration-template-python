@@ -1,81 +1,37 @@
-# Template Project for Digital.ai Release Integrations
+<!--
+  Starter README for a plugin generated from the Release integration template.
+  After cloning the template, replace the template's README with this file:
+
+      mv README-plugin.md README.md      # (Windows: move /Y README-plugin.md README.md)
+
+  Then fill in the placeholders below: the title, the one-line description, and the
+  plugin name in `project.properties`.
+-->
+
+# <Your Plugin Name>
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 [![digitalai-release-sdk](https://img.shields.io/badge/digitalai--release--sdk-PyPI-orange)](https://pypi.org/project/digitalai-release-sdk/)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
-This project serves as a template for developing a Python-based **container plugin**
-for Digital.ai Release. Each task is a Python class in [`src/`](src/) that is packaged
-into a Docker image and run by Release as a container task.
+<!-- One line on what this plugin does. -->
+A Digital.ai Release **container plugin**. It contributes custom **task types** — each is a
+Python class in [`src/`](src/) that is packaged into a Docker image and run by Release as a
+container task. Built from the
+[Release integration template](https://github.com/digital-ai/release-integration-template-python).
 
 The task code is built on the **[`digitalai-release-sdk`](https://pypi.org/project/digitalai-release-sdk/)** —
 tasks subclass its `BaseTask` (or `ApiBaseTask`) to read inputs, set outputs, and call the Release APIs.
 It is the project's main dependency and is pinned in [`requirements.txt`](requirements.txt).
 
-Building the project produces **two artifacts**:
+Building this project produces **two artifacts**:
 
 - a **plugin zip** — the plugin metadata from `resources/`, installed into Release.
 - a **Docker image** — the `src/` task code and its dependencies, pushed to a container registry and run by Release.
 
 > [!TIP]
-> **Writing your own tasks?** Start with the **[Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md)** —
-> it explains how a container plugin works, how to add a task, and how each bundled example was built.
-
-> [!IMPORTANT]
-> **Using this as a template?** This README documents the *template itself*. After you create your
-> own repo from it, personalize the clone: set the plugin name/version in
-> [`project.properties`](project.properties), then replace this file with the starter plugin README
-> ([`README-plugin.md`](README-plugin.md)):
->
-> ```sh
-> mv README-plugin.md README.md        # Windows: move /Y README-plugin.md README.md
-> ```
->
-> The `develop-release-integration` setup flow does this for you.
-
-## Contents
-
-- [Quick start](#quick-start)
-- [Project layout](#project-layout)
-- [Prerequisites](#prerequisites)
-- [Development](#development)
-- [Run Release locally](#run-release-locally)
-- [Build & publish](#build--publish)
-- [Install the plugin into Release](#install-the-plugin-into-release)
-- [Try it out](#try-it-out)
-- [Related resources](#related-resources)
-- [License](#license)
-
-## Quick start
-
-```sh
-uv sync --extra dev                  # set up the local env (.venv)
-docker compose up -d --build         # local Release server at http://localhost:5516
-```
-
-Then create a template with the **Hello** task and run it. Each step is detailed below.
-
-## Project layout
-
-| Path                  | Purpose                                                                       |
-|-----------------------|-------------------------------------------------------------------------------|
-| `src/`                | Task implementations. **This code ships inside the Docker image.** See the [Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md). |
-| `tests/`              | Tests for the task classes — `unit/` (fast) and `integration/` (network). Not shipped in the image. |
-| `resources/`          | Plugin metadata (`type-definitions.yaml`, icons) packaged into the plugin zip. |
-| `requirements.txt`    | Runtime dependencies installed into the Docker image. **Source of truth for the container.** |
-| `pyproject.toml`      | Local development environment, managed by [uv](https://docs.astral.sh/uv/).   |
-| `Dockerfile`          | Builds the container image that runs the tasks.                               |
-| `build.sh` / `build.bat` | Builds the plugin zip and the Docker image, and uploads them to Release.    |
-| `project.properties`  | Plugin name, version, and registry coordinates used by the build scripts.     |
-| `docker-compose.yaml` | A local Dockerized Release server (+ container registry) for testing.          |
-| `dev-environment/`    | Build contexts and config used by `docker-compose.yaml`.                       |
-| `docs/`               | Contributor docs: `PLUGIN_DEVELOPMENT.md` (detailed guide), `AGENTS.md` (conventions/guardrails for AI agents), and `SKILL.md` (portable `develop-release-integration` skill that routes to the docs above). |
-| `README-plugin.md`    | Starter README for the generated plugin — copy over `README.md` after creating your repo (see the note above). |
-
-> [!NOTE]
-> This is **not** a pure Python package — it is not published to PyPI.
-> The `src/` tree is copied into a Docker image and executed there by the
-> Release task wrapper.
+> **Adding or changing tasks?** See the **[Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md)** —
+> it explains how a container plugin works, how to add a task, and the type ↔ class naming contract.
 
 ## Prerequisites
 
@@ -122,9 +78,8 @@ uv run pytest tests/unit          # or: uv run pytest -m "not integration"
 ```
 
 Integration tests that need a live Digital.ai Release server skip themselves
-automatically when none is reachable. Some integration tests call external
-services directly, so they require internet access. Point Release-backed tests at
-a server (defaults shown) with:
+automatically when none is reachable. Point Release-backed tests at a server
+(defaults shown) with:
 
 ```sh
 # macOS / Linux
@@ -201,19 +156,10 @@ Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.
 **Option B — Release UI**
 
 In the Release **Plugin Manager**, upload the zip from `build/`
-(named `<PLUGIN>-<VERSION>.zip`, e.g. `publisher-release-target-integration-0.0.1.zip`
-with the current [`project.properties`](project.properties)),
+(named `<PLUGIN>-<VERSION>.zip`, using the values in [`project.properties`](project.properties)),
 then reload the browser.
 
-## Try it out
-
-Create a template with the **Hello** task (`containerExamples.Hello`) and run it.
-
-When you are done, stop the local environment:
-
-```sh
-docker compose down
-```
+Once installed, add one of your tasks to a release template and run it.
 
 ## Related resources
 
@@ -221,8 +167,6 @@ docker compose down
   API Classes and Models reference for the Python client library.
 - **[Digital.ai Python SDK Documentation](https://docs.digital.ai/release/docs/how-to/overview-python-sdk)** —
   Comprehensive guide to using the Python SDK and building custom tasks.
-- **[SDK Template Project for integration plugins](https://github.com/digital-ai/release-integration-template-python)** —
-  A starting point for building custom integrations using Digital.ai Release and Python.
 - **[Digital.ai Release Python SDK](https://pypi.org/project/digitalai-release-sdk/)** —
   The official SDK package for integrating with Digital.ai Release, on PyPI.
 
