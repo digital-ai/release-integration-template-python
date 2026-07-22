@@ -66,7 +66,7 @@ From the repository root:
 
 ```sh
 uv sync --extra dev                  # set up the local environment (.venv)
-docker compose up -d --build         # start Release and the local registry
+docker compose up -d --build         # start Release, the runner, and the local registry
 ```
 
 Wait for the Release container log to show `Digital.ai Release has started.` Before
@@ -102,7 +102,7 @@ After the upload completes, create a template with the **Hello** task
 | `Dockerfile`          | Builds the container image that runs the tasks.                               |
 | `build.sh` / `build.bat` | Builds the plugin zip and the Docker image, and uploads them to Release.    |
 | `project.properties`  | Plugin name, version, and registry coordinates used by the build scripts.     |
-| `docker-compose.yaml` | A local Dockerized Release server (+ container registry) for testing.          |
+| `docker-compose.yaml` | A local Dockerized Release server (+ runner + container registry) for testing. |
 | `dev-environment/`    | Build contexts and config used by `docker-compose.yaml`.                       |
 | `docs/`               | Contributor docs: `PLUGIN_DEVELOPMENT.md` (detailed guide), `AGENTS.md` (conventions/guardrails for AI agents), and `SKILL.md` (portable `develop-release-integration` skill that routes to the docs above). |
 | `README-plugin.md`    | Starter README for the generated plugin — copy over `README.md` after creating your repo (see the note above). |
@@ -196,7 +196,7 @@ uv add --optional dev <package>
 
 ## Run Release locally
 
-Run a local Release server, with its own container registry, using Docker.
+Run a local Release server, its remote runner, and a container registry, using Docker.
 
 ```sh
 docker compose up -d --build

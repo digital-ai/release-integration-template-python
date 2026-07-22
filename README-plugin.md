@@ -111,7 +111,7 @@ uv add --optional dev <package>
 
 ## Run Release locally
 
-Run a local Release server, with its own container registry, using Docker.
+Run a local Release server, its remote runner, and a container registry, using Docker.
 
 ```sh
 docker compose up -d --build
@@ -181,7 +181,7 @@ then reload the browser.
 
 Use this sequence to verify the complete local workflow:
 
-1. Start the local Release and registry with `docker compose up -d --build`.
+1. Start the local Release, runner, and registry with `docker compose up -d --build`.
 2. Wait for `Digital.ai Release has started.` in the Release container logs.
 3. Add `127.0.0.1 container-registry` to your hosts file.
 4. Build and install the plugin with `./build.sh --upload` or `.\build.bat --upload` on Windows.

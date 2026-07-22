@@ -1,4 +1,4 @@
-Copyright 2024 Digital.ai
+Copyright 2026 Digital.ai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction,
