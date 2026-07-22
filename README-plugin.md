@@ -134,6 +134,13 @@ The build scripts read `project.properties`, build the plugin zip from
 `resources/`, build the Docker image from the `Dockerfile`, and push the image to
 the configured registry.
 
+The `--image`, default, and `--upload` workflows require Docker to be running and
+the registry in `REGISTRY_URL` to be reachable. For the local Docker Compose
+environment, start the stack first and add `127.0.0.1 container-registry` to your
+hosts file as described in [Run Release locally](#run-release-locally). For a remote
+registry, make sure Docker is authenticated and that `REGISTRY_URL` and
+`REGISTRY_ORG` in [`project.properties`](project.properties) are correct.
+
 | Command                | Result                                                        |
 |------------------------|---------------------------------------------------------------|
 | `./build.sh`           | Build the zip **and** the image, and push the image.          |
@@ -141,16 +148,27 @@ the configured registry.
 | `./build.sh --image`   | Build only the Docker image and push it.                      |
 | `./build.sh --upload`  | Build the zip and image, push the image, and upload the zip to Release. |
 
-On Windows, use `build.bat` with the same arguments.
+On Windows, use `build.bat` with the same arguments, for example:
+
+```powershell
+.\build.bat --upload
+```
 
 ## Install the plugin into Release
 
 **Option A — command line**
 
-Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml), then:
+Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml),
+then make sure the Release server is running and use the command for your platform:
 
 ```sh
-./build.sh --upload        # build.bat --upload on Windows
+# macOS / Linux
+./build.sh --upload
+```
+
+```powershell
+# Windows
+.\build.bat --upload
 ```
 
 **Option B — Release UI**
@@ -159,7 +177,29 @@ In the Release **Plugin Manager**, upload the zip from `build/`
 (named `<PLUGIN>-<VERSION>.zip`, using the values in [`project.properties`](project.properties)),
 then reload the browser.
 
-Once installed, add one of your tasks to a release template and run it.
+## First successful run
+
+Use this sequence to verify the complete local workflow:
+
+1. Start the local Release and registry with `docker compose up -d --build`.
+2. Wait for `Digital.ai Release has started.` in the Release container logs.
+3. Add `127.0.0.1 container-registry` to your hosts file.
+4. Build and install the plugin with `./build.sh --upload` or `.\build.bat --upload` on Windows.
+5. Open <http://localhost:5516>, create a template, and add one of your task types.
+6. Run the release and verify the task produces the expected output.
+
+## Clean up the local environment
+
+When you finish testing, stop the local Release server, runner, and registry:
+
+```sh
+docker compose down
+```
+
+This stops the containers but preserves the local registry/server data mounted under
+`dev-environment/`. To reset the development environment and remove that test state,
+run `docker compose down` and remove the generated contents under that directory before
+starting the stack again.
 
 ## Related resources
 

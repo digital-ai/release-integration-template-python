@@ -33,27 +33,64 @@ Building the project produces **two artifacts**:
 >
 > The `develop-release-integration` setup flow does this for you.
 
+## After creating your repository
+
+If you created a repository from this template, complete these steps before
+developing your integration:
+
+1. Replace this README with the generated-plugin starter:
+  `mv README-plugin.md README.md` (or `move /Y README-plugin.md README.md` on Windows).
+2. Set `PLUGIN`, `VERSION`, `REGISTRY_URL`, and `REGISTRY_ORG` in
+  [`project.properties`](project.properties).
+3. Remove or adapt the example tasks in `src/`, `resources/type-definitions.yaml`,
+  and `tests/`.
+4. Update the plugin description and task details in the new README.
+5. Run `uv sync --extra dev` and `uv run pytest tests/unit` before building.
+
+The generated README is the README users of your plugin will see. Keep the
+template-specific instructions in this file only while developing from the template.
+
 ## Contents
 
 - [Quick start](#quick-start)
+- [After creating your repository](#after-creating-your-repository)
 - [Project layout](#project-layout)
 - [Prerequisites](#prerequisites)
 - [Development](#development)
 - [Run Release locally](#run-release-locally)
 - [Build & publish](#build--publish)
 - [Install the plugin into Release](#install-the-plugin-into-release)
-- [Try it out](#try-it-out)
+- [First successful run](#first-successful-run)
+- [Clean up the local environment](#clean-up-the-local-environment)
 - [Related resources](#related-resources)
 - [License](#license)
 
 ## Quick start
 
+From the repository root:
+
 ```sh
-uv sync --extra dev                  # set up the local env (.venv)
-docker compose up -d --build         # local Release server at http://localhost:5516
+uv sync --extra dev                  # set up the local environment (.venv)
+docker compose up -d --build         # start Release and the local registry
 ```
 
-Then create a template with the **Hello** task and run it. Each step is detailed below.
+Wait for the Release container log to show `Digital.ai Release has started.` Before
+building, add `127.0.0.1 container-registry` to your hosts file (see
+[Run Release locally](#run-release-locally)). Then build and install the plugin:
+
+```sh
+# macOS / Linux
+./build.sh --upload
+```
+
+```powershell
+# Windows (PowerShell)
+.\build.bat --upload
+```
+
+The default local Release server is available at <http://localhost:5516>.
+After the upload completes, create a template with the **Hello** task
+(`containerExamples.Hello`) and run it. Each step is detailed below.
 
 ## Project layout
 
@@ -179,6 +216,13 @@ The build scripts read `project.properties`, build the plugin zip from
 `resources/`, build the Docker image from the `Dockerfile`, and push the image to
 the configured registry.
 
+The `--image`, default, and `--upload` workflows require Docker to be running and
+the registry in `REGISTRY_URL` to be reachable. For the local Docker Compose
+environment, start the stack first and add `127.0.0.1 container-registry` to your
+hosts file as described in [Run Release locally](#run-release-locally). For a remote
+registry, make sure Docker is authenticated and that `REGISTRY_URL` and
+`REGISTRY_ORG` in [`project.properties`](project.properties) are correct.
+
 | Command                | Result                                                        |
 |------------------------|---------------------------------------------------------------|
 | `./build.sh`           | Build the zip **and** the image, and push the image.          |
@@ -186,16 +230,27 @@ the configured registry.
 | `./build.sh --image`   | Build only the Docker image and push it.                      |
 | `./build.sh --upload`  | Build the zip and image, push the image, and upload the zip to Release. |
 
-On Windows, use `build.bat` with the same arguments.
+On Windows, use `build.bat` with the same arguments, for example:
+
+```powershell
+.\build.bat --upload
+```
 
 ## Install the plugin into Release
 
 **Option A — command line**
 
-Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml), then:
+Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml),
+then make sure the Release server is running and use the command for your platform:
 
 ```sh
-./build.sh --upload        # build.bat --upload on Windows
+# macOS / Linux
+./build.sh --upload
+```
+
+```powershell
+# Windows
+.\build.bat --upload
 ```
 
 **Option B — Release UI**
@@ -205,15 +260,33 @@ In the Release **Plugin Manager**, upload the zip from `build/`
 with the current [`project.properties`](project.properties)),
 then reload the browser.
 
-## Try it out
+## First successful run
 
-Create a template with the **Hello** task (`containerExamples.Hello`) and run it.
+Use this sequence to verify the complete local workflow:
 
-When you are done, stop the local environment:
+1. Start the local Release and registry with `docker compose up -d --build`.
+2. Wait for `Digital.ai Release has started.` in the Release container logs.
+3. Add `127.0.0.1 container-registry` to your hosts file.
+4. Build and install the plugin with `./build.sh --upload` or `.\build.bat --upload` on Windows.
+5. Open <http://localhost:5516>, create a template, and add
+  `containerExamples.Hello`.
+6. Run the release and verify the task produces its greeting output.
+
+For the full setup and troubleshooting details, see [Run Release locally](#run-release-locally),
+[Build & publish](#build--publish), and [Install the plugin into Release](#install-the-plugin-into-release).
+
+## Clean up the local environment
+
+When you finish testing, stop the local Release server, runner, and registry:
 
 ```sh
 docker compose down
 ```
+
+This stops the containers but preserves the local registry/server data mounted under
+`dev-environment/`. To reset the development environment and remove that test state,
+run `docker compose down` and remove the generated contents under that directory before
+starting the stack again.
 
 ## Related resources
 
