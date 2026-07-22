@@ -22,16 +22,24 @@ Building the project produces **two artifacts**:
 > it explains how a container plugin works, how to add a task, and how each bundled example was built.
 
 > [!IMPORTANT]
-> **Using this as a template?** This README documents the *template itself*. After you create your
-> own repo from it, personalize the clone: set the plugin name/version in
-> [`project.properties`](project.properties), then replace this file with the starter plugin README
-> ([`README-plugin.md`](README-plugin.md)):
->
-> ```sh
-> mv README-plugin.md README.md        # Windows: move /Y README-plugin.md README.md
-> ```
->
-> The `develop-release-integration` setup flow does this for you.
+> **Using this as a template?** This README documents the *template itself*. After you create
+> your own repo from it, follow [After creating your repository](#after-creating-your-repository)
+> to personalize the clone.
+
+## Contents
+
+- [After creating your repository](#after-creating-your-repository)
+- [Quick start](#quick-start)
+- [Project layout](#project-layout)
+- [Prerequisites](#prerequisites)
+- [Development](#development)
+- [Run Release locally](#run-release-locally)
+- [Build & publish](#build--publish)
+- [Install the plugin into Release](#install-the-plugin-into-release)
+- [First successful run](#first-successful-run)
+- [Clean up the local environment](#clean-up-the-local-environment)
+- [Related resources](#related-resources)
+- [License](#license)
 
 ## After creating your repository
 
@@ -47,23 +55,10 @@ developing your integration:
 4. Update the plugin description and task details in the new README.
 5. Run `uv sync --extra dev` and `uv run pytest tests/unit` before building.
 
-The generated README is the README users of your plugin will see. Keep the
-template-specific instructions in this file only while developing from the template.
-
-## Contents
-
-- [Quick start](#quick-start)
-- [After creating your repository](#after-creating-your-repository)
-- [Project layout](#project-layout)
-- [Prerequisites](#prerequisites)
-- [Development](#development)
-- [Run Release locally](#run-release-locally)
-- [Build & publish](#build--publish)
-- [Install the plugin into Release](#install-the-plugin-into-release)
-- [First successful run](#first-successful-run)
-- [Clean up the local environment](#clean-up-the-local-environment)
-- [Related resources](#related-resources)
-- [License](#license)
+The [`develop-release-integration`](docs/SKILL.md) skill guides you (or your AI agent)
+through these steps, including the README swap. The generated README is the one users of
+your plugin will see — keep these template-specific instructions only while developing
+from the template.
 
 ## Quick start
 
@@ -75,8 +70,11 @@ docker compose up -d --build         # start Release and the local registry
 ```
 
 Wait for the Release container log to show `Digital.ai Release has started.` Before
-building, add `127.0.0.1 container-registry` to your hosts file (see
-[Run Release locally](#run-release-locally)). Then build and install the plugin:
+building, add `127.0.0.1 container-registry` to your hosts file — this requires
+administrator/`sudo` rights (see [Run Release locally](#run-release-locally)). Then
+build and install the plugin. The `--upload` step reads your Release server details
+from [`.xebialabs/config.yaml`](.xebialabs/config.yaml) (defaults point at the local
+server):
 
 ```sh
 # macOS / Linux
@@ -84,7 +82,7 @@ building, add `127.0.0.1 container-registry` to your hosts file (see
 ```
 
 ```powershell
-# Windows (PowerShell)
+# Windows (PowerShell or Command Prompt)
 .\build.bat --upload
 ```
 
@@ -173,6 +171,11 @@ RELEASE_SERVER_URL=http://localhost:5516 RELEASE_USERNAME=admin RELEASE_PASSWORD
 $env:RELEASE_SERVER_URL="http://localhost:5516"; $env:RELEASE_USERNAME="admin"; $env:RELEASE_PASSWORD="admin"; uv run pytest tests/integration
 ```
 
+```bat
+REM Windows (Command Prompt)
+set RELEASE_SERVER_URL=http://localhost:5516 && set RELEASE_USERNAME=admin && set RELEASE_PASSWORD=admin && uv run pytest tests/integration
+```
+
 ### Add a dependency
 
 Because the container is built from `requirements.txt`, a new **runtime**
@@ -230,7 +233,8 @@ registry, make sure Docker is authenticated and that `REGISTRY_URL` and
 | `./build.sh --image`   | Build only the Docker image and push it.                      |
 | `./build.sh --upload`  | Build the zip and image, push the image, and upload the zip to Release. |
 
-On Windows, use `build.bat` with the same arguments, for example:
+On Windows, use `build.bat` with the same arguments (works in both PowerShell and
+Command Prompt), for example:
 
 ```powershell
 .\build.bat --upload
@@ -240,8 +244,9 @@ On Windows, use `build.bat` with the same arguments, for example:
 
 **Option A — command line**
 
-Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml),
-then make sure the Release server is running and use the command for your platform:
+Set your Release server details in [`.xebialabs/config.yaml`](.xebialabs/config.yaml)
+(the same file used by the [Quick start](#quick-start) `--upload` step), then make sure
+the Release server is running and use the command for your platform:
 
 ```sh
 # macOS / Linux
@@ -262,18 +267,15 @@ then reload the browser.
 
 ## First successful run
 
-Use this sequence to verify the complete local workflow:
+The [Quick start](#quick-start) covers the happy path end to end. Once the plugin is
+installed, verify the workflow in the Release UI:
 
-1. Start the local Release and registry with `docker compose up -d --build`.
-2. Wait for `Digital.ai Release has started.` in the Release container logs.
-3. Add `127.0.0.1 container-registry` to your hosts file.
-4. Build and install the plugin with `./build.sh --upload` or `.\build.bat --upload` on Windows.
-5. Open <http://localhost:5516>, create a template, and add
-  `containerExamples.Hello`.
-6. Run the release and verify the task produces its greeting output.
+1. Open <http://localhost:5516>, create a template, and add `containerExamples.Hello`.
+2. Run the release and verify the task produces its greeting output.
 
-For the full setup and troubleshooting details, see [Run Release locally](#run-release-locally),
-[Build & publish](#build--publish), and [Install the plugin into Release](#install-the-plugin-into-release).
+If a step fails, see [Run Release locally](#run-release-locally),
+[Build & publish](#build--publish), and [Install the plugin into Release](#install-the-plugin-into-release)
+for the full setup and troubleshooting details.
 
 ## Clean up the local environment
 
