@@ -89,13 +89,10 @@ server):
 ```
 
 The default local Release server is available at <http://localhost:5516>.
-After the upload completes, reload the Release server from the UI: go to
-<http://localhost:5516/#/pluginManager> (**Manage plugins**), open
-**Installed plugins**, and search for your plugin to confirm it is listed. If the
-task still doesn't appear when building a template, hard-refresh the browser
-(Ctrl/Cmd+Shift+R) to clear the UI cache. Then create a template with the
-**Hello** task (`containerExamples.Hello`) and run it. Each step is detailed
-below.
+After the upload completes, confirm the plugin is listed under
+[**Manage plugins**](#verify-the-plugin-is-installed), then create a template
+with the **Hello** task (`containerExamples.Hello`) and run it. Each step is
+detailed below.
 
 ## Project layout
 
@@ -270,8 +267,18 @@ the Release server is running and use the command for your platform:
 In the Release **Manage plugins** page (<http://localhost:5516/#/pluginManager>),
 upload the zip from `build/`
 (named `<PLUGIN>-<VERSION>.zip`, e.g. `publisher-release-target-integration-0.0.1.zip`
-with the current [`project.properties`](project.properties)), then check
-**Installed plugins** and reload the browser.
+with the current [`project.properties`](project.properties)).
+
+### Verify the plugin is installed
+
+However you uploaded it, reload the Release server from the UI to pick up the new
+task types:
+
+1. Open <http://localhost:5516/#/pluginManager> (**Manage plugins**).
+2. Select **Installed plugins** and search for your plugin — it should appear with
+   the version from [`project.properties`](project.properties).
+3. If the task still doesn't show up when you build a template, hard-refresh the
+   browser (Ctrl/Cmd+Shift+R) to clear the UI cache.
 
 ## First successful run
 
