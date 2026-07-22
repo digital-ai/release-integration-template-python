@@ -43,13 +43,15 @@ Building the project produces **two artifacts**:
 
 ## After creating your repository
 
-If you created a repository from this template, complete these steps before
-developing your integration:
+The [`release-integration-template-python`](https://github.com/digital-ai/release-integration-template-python)
+repository is a template. On its main page, click **Use this template → Create a new repository**.
+Then, before developing your integration, complete these steps:
 
 1. Replace this README with the generated-plugin starter:
   `mv README-plugin.md README.md` (or `move /Y README-plugin.md README.md` on Windows).
 2. Set `PLUGIN`, `VERSION`, `REGISTRY_URL`, and `REGISTRY_ORG` in
-  [`project.properties`](project.properties).
+  [`project.properties`](project.properties). Use the naming convention
+  `[publisher]-release-[target]-integration` (e.g. `acme-release-example-integration`).
 3. Remove or adapt the example tasks in `src/`, `resources/type-definitions.yaml`,
   and `tests/`.
 4. Update the plugin description and task details in the new README.
