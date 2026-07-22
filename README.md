@@ -96,7 +96,7 @@ After the upload completes, create a template with the **Hello** task
 |-----------------------|-------------------------------------------------------------------------------|
 | `src/`                | Task implementations. **This code ships inside the Docker image.** See the [Plugin Development Guide](docs/PLUGIN_DEVELOPMENT.md). |
 | `tests/`              | Tests for the task classes — `unit/` (fast) and `integration/` (network). Not shipped in the image. |
-| `resources/`          | Plugin metadata (`type-definitions.yaml`, icons) packaged into the plugin zip. |
+| `resources/`          | Plugin metadata packaged into the plugin zip: `type-definitions.yaml` (task types), the plugin icon (`test.png`), and `plugin-version.properties` (name/version, filled from `project.properties` at build). |
 | `requirements.txt`    | Runtime dependencies installed into the Docker image. **Source of truth for the container.** |
 | `pyproject.toml`      | Local development environment, managed by [uv](https://docs.astral.sh/uv/).   |
 | `Dockerfile`          | Builds the container image that runs the tasks.                               |
