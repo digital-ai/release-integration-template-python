@@ -173,9 +173,10 @@ then make sure the Release server is running and use the command for your platfo
 
 **Option B — Release UI**
 
-In the Release **Plugin Manager**, upload the zip from `build/`
+In the Release **Manage plugins** page (`/#/pluginManager`, e.g.
+<http://localhost:5516/#/pluginManager>), upload the zip from `build/`
 (named `<PLUGIN>-<VERSION>.zip`, using the values in [`project.properties`](project.properties)),
-then reload the browser.
+then check **Installed plugins** to confirm it is listed and reload the browser.
 
 ## First successful run
 

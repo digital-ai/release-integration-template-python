@@ -89,8 +89,13 @@ server):
 ```
 
 The default local Release server is available at <http://localhost:5516>.
-After the upload completes, create a template with the **Hello** task
-(`containerExamples.Hello`) and run it. Each step is detailed below.
+After the upload completes, reload the Release server from the UI: go to
+<http://localhost:5516/#/pluginManager> (**Manage plugins**), open
+**Installed plugins**, and search for your plugin to confirm it is listed. If the
+task still doesn't appear when building a template, hard-refresh the browser
+(Ctrl/Cmd+Shift+R) to clear the UI cache. Then create a template with the
+**Hello** task (`containerExamples.Hello`) and run it. Each step is detailed
+below.
 
 ## Project layout
 
@@ -262,10 +267,11 @@ the Release server is running and use the command for your platform:
 
 **Option B — Release UI**
 
-In the Release **Plugin Manager**, upload the zip from `build/`
+In the Release **Manage plugins** page (<http://localhost:5516/#/pluginManager>),
+upload the zip from `build/`
 (named `<PLUGIN>-<VERSION>.zip`, e.g. `publisher-release-target-integration-0.0.1.zip`
-with the current [`project.properties`](project.properties)),
-then reload the browser.
+with the current [`project.properties`](project.properties)), then check
+**Installed plugins** and reload the browser.
 
 ## First successful run
 

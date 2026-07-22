@@ -465,7 +465,7 @@ docker compose up -d --build
 | Release won't start: `Trying to register duplicate definition for type ...` | A type is defined twice (often a leftover from a previous install). **Reset** the dev environment. |
 | Release log stuck at `Waiting for changelog lock...` | Stale DB lock. **Reset** the dev environment. |
 | `Could not find a type definition associated with type [...]` | A type name or an `extends:` reference in `type-definitions.yaml` is inconsistent. Make the names match; reset if needed. |
-| Your task is missing from the **Add task** menu, or its properties don't show | UI cache. Hard-refresh the browser (Ctrl/Cmd+Shift+R). No server restart needed. |
+| Your task is missing from the **Add task** menu, or its properties don't show | First confirm the plugin uploaded: **Manage plugins** → **Installed plugins** (<http://localhost:5516/#/pluginManager>). If it is listed, this is UI cache — hard-refresh the browser (Ctrl/Cmd+Shift+R). No server restart needed. |
 | Class-not-found at run time | The [naming contract](#the-naming-contract-type--class) is broken: the type name after the dot must equal a class name under `src/`. |
 | Image push fails | `container-registry` is not in your hosts file, or the registry container is down. Check `curl http://container-registry:5050/v2/_catalog`. |
 | Unit test fails with `KeyError` on an output property | `execute()` raised before setting outputs. Read the traceback in the pytest output for the real error. |
